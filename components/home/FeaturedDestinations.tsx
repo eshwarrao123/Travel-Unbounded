@@ -1,42 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
-
-const destinations = [
-  {
-    id: 1,
-    name: 'Iceland',
-    tagline: 'Land of Fire and Ice',
-    description: 'Witness the raw power of nature where glaciers meet volcanoes, and the Northern Lights dance across Arctic skies.',
-    image: 'https://images.unsplash.com/photo-1504829857797-ddff29c27927?q=80&w=2940&auto=format&fit=crop',
-    featured: true,
-  },
-  {
-    id: 2,
-    name: 'Japan',
-    tagline: 'Ancient Traditions, Modern Wonders',
-    description: 'From tranquil temples to neon-lit streets, experience a culture where tradition and innovation coexist beautifully.',
-    image: 'https://images.unsplash.com/photo-1542640244-7e672d6cef4e?q=80&w=2940&auto=format&fit=crop',
-    featured: false,
-  },
-  {
-    id: 3,
-    name: 'Patagonia',
-    tagline: 'The Edge of the World',
-    description: 'Trek through pristine wilderness where jagged peaks pierce the sky and glaciers carve through ancient landscapes.',
-    image: 'https://images.unsplash.com/photo-1534067783941-51c9c23ecefd?q=80&w=2787&auto=format&fit=crop',
-    featured: false,
-  },
-  {
-    id: 4,
-    name: 'Morocco',
-    tagline: 'A Feast for the Senses',
-    description: 'Lose yourself in vibrant souks, Saharan dunes, and the warm hospitality of a land where every corner tells a story.',
-    image: 'https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?q=80&w=2787&auto=format&fit=crop',
-    featured: false,
-  },
-];
+import { getAllDestinations } from '@/lib/destinations';
 
 export default function FeaturedDestinations() {
+  const destinations = getAllDestinations().slice(0, 4);
   const featured = destinations.find(d => d.featured);
   const others = destinations.filter(d => !d.featured);
 
@@ -58,11 +25,11 @@ export default function FeaturedDestinations() {
           {/* Featured Destination - Large */}
           {featured && (
             <Link 
-              href={`/destinations/${featured.id}`}
+              href={`/destinations/${featured.slug}`}
               className="group relative overflow-hidden aspect-[4/5] lg:row-span-2"
             >
               <Image
-                src={featured.image}
+                src={featured.heroImage}
                 alt={featured.name}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -72,8 +39,8 @@ export default function FeaturedDestinations() {
               <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end text-white">
                 <p className="text-sm uppercase tracking-wider mb-2 opacity-90">Featured</p>
                 <h3 className="heading-subsection mb-2">{featured.name}</h3>
-                <p className="body-small opacity-90 mb-3">{featured.tagline}</p>
-                <p className="body max-w-lg opacity-95">{featured.description}</p>
+                <p className="body-small opacity-90 mb-3">{featured.shortDescription}</p>
+                <p className="body max-w-lg opacity-95">{featured.description.substring(0, 150)}...</p>
               </div>
             </Link>
           )}
@@ -83,13 +50,13 @@ export default function FeaturedDestinations() {
             {others.map((destination, index) => (
               <Link
                 key={destination.id}
-                href={`/destinations/${destination.id}`}
+                href={`/destinations/${destination.slug}`}
                 className={`group relative overflow-hidden ${
                   index === 0 ? 'aspect-[16/9]' : 'aspect-[3/2]'
                 }`}
               >
                 <Image
-                  src={destination.image}
+                  src={destination.heroImage}
                   alt={destination.name}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -98,7 +65,7 @@ export default function FeaturedDestinations() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                 <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">
                   <h3 className="heading-subsection mb-2">{destination.name}</h3>
-                  <p className="body-small opacity-90">{destination.tagline}</p>
+                  <p className="body-small opacity-90">{destination.shortDescription}</p>
                 </div>
               </Link>
             ))}
