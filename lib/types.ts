@@ -1,9 +1,9 @@
-// Destination Data Model
 export interface Destination {
   id: string;
   slug: string;
   name: string;
   country: string;
+  category: 'india' | 'international';
   region: string;
   shortDescription: string;
   description: string;
@@ -11,7 +11,7 @@ export interface Destination {
   galleryImages: string[];
   bestTimeToVisit: string[];
   duration: string;
-  startingPrice?: number;
+  startingPrice: number;
   highlights: string[];
   experiences: Experience[];
   travelStyle: TravelStyle[];

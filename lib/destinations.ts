@@ -16,6 +16,20 @@ export function getFeaturedDestinations(): Destination[] {
 }
 
 /**
+ * Get India destinations
+ */
+export function getIndiaDestinations(): Destination[] {
+  return destinations.filter(dest => dest.category === 'india');
+}
+
+/**
+ * Get International destinations
+ */
+export function getInternationalDestinations(): Destination[] {
+  return destinations.filter(dest => dest.category === 'international');
+}
+
+/**
  * Get destination by slug
  */
 export function getDestinationBySlug(slug: string): Destination | undefined {

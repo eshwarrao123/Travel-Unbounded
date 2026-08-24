@@ -3,9 +3,9 @@ import { getAllDestinations, getFeaturedDestinations, getAllRegions } from '@/li
 import DestinationCard from '@/components/destinations/DestinationCard';
 
 export const metadata: Metadata = {
-  title: 'Destinations - Travel Unbounded',
-  description: 'Explore our curated collection of extraordinary destinations around the world. From Iceland to Patagonia, discover journeys that transform the way you see the world.',
-  keywords: 'travel destinations, luxury travel, adventure travel, cultural experiences, premium travel',
+  title: 'Destinations | Travel Unbounded',
+  description: 'Explore our curated collection of extraordinary India and International travel destinations. From Kerala to Kenya, Ladakh to Iceland, discover journeys that transform.',
+  keywords: 'travel destinations, India travel, international safaris, experiential travel, Kerala, Kenya, Iceland, Ladakh',
 };
 
 export default function DestinationsPage() {
