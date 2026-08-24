@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
+import Navigation from "@/components/layout/Navigation";
+import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "Travel Unbounded",
-  description: "Project foundation for Travel Unbounded travel company website.",
+  title: "Travel Unbounded - Extraordinary Journeys Await",
+  description: "Discover curated travel experiences crafted by experts. From Iceland to Patagonia, explore destinations that transform the way you see the world.",
+  keywords: "travel, luxury travel, bespoke journeys, curated experiences, adventure travel, cultural immersion",
 };
 
 export default function RootLayout({
@@ -15,9 +15,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
-      <body className={`${inter.className} min-h-full flex flex-col antialiased`}>
-        {children}
+    <html lang="en">
+      <body className="min-h-screen flex flex-col">
+        <Navigation />
+        <div className="flex-1">
+          {children}
+        </div>
+        <Footer />
       </body>
     </html>
   );
