@@ -155,7 +155,7 @@ export default function BookingEnquiryForm() {
     }));
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     // Mark all fields touched
@@ -181,14 +181,48 @@ export default function BookingEnquiryForm() {
       return;
     }
 
-    // Client validation passed — Simulate submitting state UX
+    // Client validation passed
     setSubmitError(null);
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    try {
+      const payload = {
+        fullName: formData.fullName,
+        countryCode: formData.countryCode,
+        contactNumber: formData.contactNumber,
+        email: formData.email,
+        dateOfTravel: formData.dateOfTravel,
+        numberOfPeople: Number(formData.numberOfPeople),
+        hotelCategory: formData.hotelCategory,
+        numberOfChildren: formData.numberOfChildren ? Number(formData.numberOfChildren) : 0,
+      };
+
+      const response = await fetch('/api/enquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (response.status === 201) {
+        setIsSubmitted(true);
+      } else if (response.status === 400) {
+        if (result.errors) {
+          setErrors(result.errors);
+        } else {
+          setSubmitError(result.message || 'Validation failed. Please check your inputs.');
+        }
+      } else {
+        setSubmitError(result.message || 'Something went wrong while submitting your enquiry. Please try again.');
+      }
+    } catch {
+      setSubmitError('Network error: Unable to connect to the server. Please check your connection and try again.');
+    } finally {
       setIsSubmitting(false);
-      setIsSubmitted(true);
-    }, 600);
+    }
   };
 
   const handleResetForm = () => {
