@@ -9,7 +9,7 @@ interface DestinationHeroProps {
 
 export default function DestinationHero({ name, country, shortDescription, heroImage }: DestinationHeroProps) {
   return (
-    <section className="relative min-h-[70vh] flex items-center pt-20">
+    <section className="relative min-h-[70vh] flex items-center">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image

@@ -10,9 +10,9 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="pt-20">
+    <main className="page-top">
       {/* Hero Banner Section */}
-      <section className="relative py-16 md:py-24 bg-[var(--color-bg-primary)] border-b border-[var(--color-border)] overflow-hidden">
+      <section className="relative py-12 md:py-16 bg-[var(--color-bg-primary)] border-b border-[var(--color-border)] overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
             src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2940&auto=format&fit=crop"

@@ -17,15 +17,15 @@ export default function CallToAction() {
       </div>
 
       {/* Content */}
-      <div className="container-content relative z-10">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="heading-section text-white mb-6">
+      <div className="container-content relative z-10 flex justify-center">
+        <div className="w-full max-w-3xl mx-auto text-center flex flex-col items-center justify-center">
+          <h2 className="heading-section text-white text-center mb-6 w-full">
             Ready to Begin Your Journey?
           </h2>
-          <p className="body-large text-white/95 mb-10 max-w-2xl mx-auto">
+          <p className="body-large text-white/95 text-center mb-10 max-w-2xl mx-auto w-full">
             Let&apos;s craft an experience uniquely tailored to your interests, timeline, and travel aspirations. Our team is ready to bring your vision to life.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full">
             <Link href="/enquire" className="btn btn-primary">
               Start Planning
             </Link>
@@ -33,7 +33,7 @@ export default function CallToAction() {
               Get in Touch
             </Link>
           </div>
-          <p className="body-small text-white/80 mt-8">
+          <p className="body-small text-white/80 text-center mt-8 w-full">
             No obligations. Just a conversation about possibilities.
           </p>
         </div>
@@ -41,3 +41,4 @@ export default function CallToAction() {
     </section>
   );
 }
+

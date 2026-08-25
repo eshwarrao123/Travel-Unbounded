@@ -29,7 +29,7 @@ export default function DestinationMeta({ duration, bestTimeToVisit, startingPri
             Starting From
           </p>
           <p className="heading-subsection text-[var(--color-text-primary)]">
-            ${startingPrice.toLocaleString()}
+            ₹{startingPrice.toLocaleString('en-IN')}
           </p>
         </div>
       )}

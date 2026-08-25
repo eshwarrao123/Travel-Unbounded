@@ -91,9 +91,9 @@ const whyChooseUsValues = [
 
 export default function AboutPage() {
   return (
-    <main className="pt-20">
+    <main className="page-top">
       {/* Hero Section */}
-      <section className="relative py-24 md:py-32 bg-[var(--color-bg-primary)] overflow-hidden border-b border-[var(--color-border)]">
+      <section className="relative py-16 md:py-20 bg-[var(--color-bg-primary)] overflow-hidden border-b border-[var(--color-border)]">
         <div className="absolute inset-0 z-0">
           <Image
             src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=2948&auto=format&fit=crop"
@@ -209,21 +209,24 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
             {whyChooseUsValues.map((value, idx) => (
-              <div
-                key={idx}
-                className="p-8 bg-white border border-[var(--color-border)] rounded-lg shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className="w-12 h-12 rounded-lg bg-[var(--color-bg-secondary)] flex items-center justify-center mb-6">
-                  {value.icon}
+              <div key={idx} className="flex gap-5 group">
+                {/* Icon */}
+                <div className="flex-shrink-0 mt-0.5">
+                  <div className="w-10 h-10 flex items-center justify-center border border-[var(--color-border)] text-[var(--color-accent)] group-hover:bg-[var(--color-accent)] group-hover:text-white group-hover:border-transparent transition-all">
+                    {value.icon}
+                  </div>
                 </div>
-                <h3 className="heading-subsection text-[var(--color-text-primary)] mb-3">
-                  {value.title}
-                </h3>
-                <p className="body text-[var(--color-text-secondary)] leading-relaxed">
-                  {value.description}
-                </p>
+                {/* Content */}
+                <div className="border-b border-[var(--color-border)] pb-8 w-full">
+                  <h3 className="text-base font-semibold text-[var(--color-text-primary)] mb-2">
+                    {value.title}
+                  </h3>
+                  <p className="body-small text-[var(--color-text-secondary)] leading-relaxed">
+                    {value.description}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
@@ -293,23 +296,26 @@ export default function AboutPage() {
 
       {/* Call To Action */}
       <section className="py-16 md:py-24 bg-[var(--color-bg-secondary)] text-center">
-        <div className="container-content max-w-3xl">
-          <h2 className="heading-section text-[var(--color-text-primary)] mb-6">
-            Ready to Begin Your Next Journey?
-          </h2>
-          <p className="body-large text-[var(--color-text-secondary)] mb-8">
-            Connect with our travel experts today to start planning your bespoke itinerary tailored precisely to your vision.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/contact" className="btn btn-primary w-full sm:w-auto">
-              Contact Our Experts
-            </Link>
-            <Link href="/destinations" className="btn btn-secondary w-full sm:w-auto">
-              Explore Destinations
-            </Link>
+        <div className="container-content flex justify-center">
+          <div className="w-full max-w-3xl mx-auto text-center flex flex-col items-center justify-center">
+            <h2 className="heading-section text-[var(--color-text-primary)] text-center mb-6 w-full">
+              Ready to Begin Your Next Journey?
+            </h2>
+            <p className="body-large text-[var(--color-text-secondary)] text-center mb-8 max-w-2xl mx-auto w-full">
+              Connect with our travel experts today to start planning your bespoke itinerary tailored precisely to your vision.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
+              <Link href="/contact" className="btn btn-primary w-full sm:w-auto">
+                Contact Our Experts
+              </Link>
+              <Link href="/destinations" className="btn btn-secondary w-full sm:w-auto">
+                Explore Destinations
+              </Link>
+            </div>
           </div>
         </div>
       </section>
+
     </main>
   );
 }

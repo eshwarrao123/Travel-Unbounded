@@ -44,7 +44,7 @@ export default async function DestinationPage({ params }: DestinationPageProps) 
   }
 
   return (
-    <main>
+    <main className="page-top">
       {/* Hero Section */}
       <DestinationHero
         name={destination.name}
@@ -186,23 +186,26 @@ export default async function DestinationPage({ params }: DestinationPageProps) 
 
       {/* Final CTA */}
       <section className="py-16 md:py-24 bg-[var(--color-bg-secondary)]">
-        <div className="container-content text-center">
-          <h2 className="heading-section text-[var(--color-text-primary)] mb-6">
-            Ready to Explore {destination.name}?
-          </h2>
-          <p className="body-large text-[var(--color-text-secondary)] mb-8 max-w-2xl mx-auto">
-            Let&apos;s begin designing your journey. Our team will create a personalized itinerary that brings this destination to life in ways that matter to you.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/enquire" className="btn btn-primary">
-              Start Planning Your Trip
-            </Link>
-            <Link href="/destinations" className="btn btn-secondary">
-              Explore More Destinations
-            </Link>
+        <div className="container-content flex justify-center">
+          <div className="w-full max-w-3xl mx-auto text-center flex flex-col items-center justify-center">
+            <h2 className="heading-section text-[var(--color-text-primary)] text-center mb-6 w-full">
+              Ready to Explore {destination.name}?
+            </h2>
+            <p className="body-large text-[var(--color-text-secondary)] text-center mb-8 max-w-2xl mx-auto w-full">
+              Let&apos;s begin designing your journey. Our team will create a personalized itinerary that brings this destination to life in ways that matter to you.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full">
+              <Link href="/enquire" className="btn btn-primary">
+                Start Planning Your Trip
+              </Link>
+              <Link href="/destinations" className="btn btn-secondary">
+                Explore More Destinations
+              </Link>
+            </div>
           </div>
         </div>
       </section>
+
     </main>
   );
 }

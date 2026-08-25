@@ -149,6 +149,11 @@ body {
   max-width: 65ch;
 }
 
+/* Page Top Offset — accounts for fixed navbar height (80px = h-20) */
+.page-top {
+  padding-top: 5rem; /* 80px */
+}
+
 /* Button Base Styles */
 .btn {
   display: inline-flex;

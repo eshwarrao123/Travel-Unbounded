@@ -3,7 +3,7 @@ import Image from 'next/image';
 const values = [
   {
     title: 'Expert Curation',
-    description: 'Every destination and experience is personally vetted by our travel experts who have spent years exploring the world&apos;s hidden gems.',
+    description: 'Every destination and experience is personally vetted by our travel experts who have explored the world\'s finest corners — and know which ones are truly worth your time.',
   },
   {
     title: 'Authentic Connections',
@@ -26,14 +26,14 @@ export default function ValueProposition() {
               Travel Reimagined
             </h2>
             <p className="body text-[var(--color-text-secondary)] mb-8">
-              We believe the best travel experiences come from deep expertise, local knowledge, and an unwavering commitment to quality. This isn&apos;t just a trip—it&apos;s a transformation.
+              We believe the best travel experiences come from deep expertise, local knowledge, and an unwavering commitment to quality. This isn&apos;t just a trip — it&apos;s a transformation.
             </p>
 
             {/* Value Points */}
             <div className="space-y-6">
               {values.map((value, index) => (
-                <div key={index} className="border-l-2 border-[var(--color-accent)] pl-6">
-                  <h3 className="heading-subsection text-[var(--color-text-primary)] mb-2">
+                <div key={index} className="border-l-2 border-[var(--color-accent)] pl-5">
+                  <h3 className="text-base font-semibold text-[var(--color-text-primary)] mb-1.5">
                     {value.title}
                   </h3>
                   <p className="body-small text-[var(--color-text-secondary)]">
@@ -55,32 +55,32 @@ export default function ValueProposition() {
                 sizes="(max-width: 1024px) 100vw, 60vw"
               />
             </div>
-            
-            {/* Stats Overlay */}
+
+            {/* Principles Overlay — factual product values, not invented statistics */}
             <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-sm p-6 md:p-8">
-              <div className="grid grid-cols-3 gap-6 text-center">
+              <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <div className="text-3xl md:text-4xl font-light text-[var(--color-accent)] mb-1">
-                    50+
+                  <div className="text-xs uppercase tracking-wider text-[var(--color-text-tertiary)] mb-1.5">
+                    Experience
                   </div>
-                  <div className="text-sm text-[var(--color-text-secondary)]">
-                    Destinations
+                  <div className="text-sm font-semibold text-[var(--color-text-primary)]">
+                    Personally Vetted
                   </div>
                 </div>
                 <div>
-                  <div className="text-3xl md:text-4xl font-light text-[var(--color-accent)] mb-1">
-                    15
+                  <div className="text-xs uppercase tracking-wider text-[var(--color-text-tertiary)] mb-1.5">
+                    Offices
                   </div>
-                  <div className="text-sm text-[var(--color-text-secondary)]">
-                    Years Experience
+                  <div className="text-sm font-semibold text-[var(--color-text-primary)]">
+                    3 Global Hubs
                   </div>
                 </div>
                 <div>
-                  <div className="text-3xl md:text-4xl font-light text-[var(--color-accent)] mb-1">
-                    98%
+                  <div className="text-xs uppercase tracking-wider text-[var(--color-text-tertiary)] mb-1.5">
+                    Support
                   </div>
-                  <div className="text-sm text-[var(--color-text-secondary)]">
-                    Satisfaction
+                  <div className="text-sm font-semibold text-[var(--color-text-primary)]">
+                    24 / 7 Concierge
                   </div>
                 </div>
               </div>

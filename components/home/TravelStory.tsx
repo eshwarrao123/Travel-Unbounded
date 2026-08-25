@@ -51,7 +51,7 @@ export default function TravelStory() {
                 Travel isn&apos;t about checking boxes or collecting passport stamps. It&apos;s about the unexpected conversations, the quiet moments of wonder, and the perspectives that shift when you step outside your familiar world.
               </p>
               <p className="body">
-                For over 15 years, we&apos;ve been crafting journeys that go deeper than the surface. We work with local guides who share their homes and stories, not just their knowledge. We choose accommodations that reflect the character of a place, not the uniformity of a brand.
+                We craft journeys that go deeper than the surface. We work with local guides who share their homes and stories, not just their knowledge. We choose accommodations that reflect the character of a place, not the uniformity of a brand.
               </p>
               <p className="body">
                 Our travelers come back changed—not because they saw famous landmarks, but because they connected with people, landscapes, and cultures in ways that matter.

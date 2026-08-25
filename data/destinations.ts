@@ -18,7 +18,7 @@ export const destinations: Destination[] = [
     ],
     bestTimeToVisit: ['September', 'October', 'November', 'December', 'January', 'February', 'March'],
     duration: '6-8 days',
-    startingPrice: 1200,
+    startingPrice: 35000,
     highlights: [
       'Private luxury houseboat cruise through Alleppey backwaters',
       'Tea tasting and plantation walk in Munnar hills',
@@ -60,7 +60,7 @@ export const destinations: Destination[] = [
     ],
     bestTimeToVisit: ['March', 'April', 'May', 'June', 'September', 'October', 'November'],
     duration: '7-10 days',
-    startingPrice: 950,
+    startingPrice: 28000,
     highlights: [
       'Scenic mountain passes and high-altitude trekking',
       'Spiritual audience and monastery visits in McLeod Ganj',
@@ -102,7 +102,7 @@ export const destinations: Destination[] = [
     ],
     bestTimeToVisit: ['May', 'June', 'July', 'August', 'September'],
     duration: '8-11 days',
-    startingPrice: 1450,
+    startingPrice: 42000,
     highlights: [
       'Pangong Tso and Tso Moriri lake expeditions',
       'Khardung La — drive across one of the highest motorable passes',
@@ -144,7 +144,7 @@ export const destinations: Destination[] = [
     ],
     bestTimeToVisit: ['October', 'November', 'December', 'January', 'February', 'March', 'April', 'May'],
     duration: '6-9 days',
-    startingPrice: 1600,
+    startingPrice: 45000,
     highlights: [
       'Radhanagar Beach — voted among Asia’s finest coastal stretches',
       'Private catamaran charters around Havelock & Neil Islands',
@@ -186,7 +186,7 @@ export const destinations: Destination[] = [
     ],
     bestTimeToVisit: ['November', 'December', 'January', 'February', 'March'],
     duration: '5-7 days',
-    startingPrice: 850,
+    startingPrice: 25000,
     highlights: [
       'Heritage Portuguese villa stays in Fontainhas, Panaji',
       'Private yacht sunsets along the Mandovi river estuaries',
@@ -230,7 +230,7 @@ export const destinations: Destination[] = [
     ],
     bestTimeToVisit: ['July', 'August', 'September', 'October', 'December', 'January', 'February'],
     duration: '8-12 days',
-    startingPrice: 4200,
+    startingPrice: 350000,
     highlights: [
       'Witnessing the Great Migration crossing Mara River',
       'Hot air balloon safari at dawn over savannah herds',
@@ -272,7 +272,7 @@ export const destinations: Destination[] = [
     ],
     bestTimeToVisit: ['February', 'March', 'April', 'September', 'October', 'November'],
     duration: '10-14 days',
-    startingPrice: 2800,
+    startingPrice: 230000,
     highlights: [
       'Overnight luxury wooden junk boat cruise in Ha Long & Lan Ha Bays',
       'Private street food tasting tours in Hanoi & Saigon',
@@ -314,7 +314,7 @@ export const destinations: Destination[] = [
     ],
     bestTimeToVisit: ['June', 'July', 'August', 'September', 'October', 'January', 'February'],
     duration: '10-14 days',
-    startingPrice: 4900,
+    startingPrice: 405000,
     highlights: [
       'Ngorongoro Crater floor private 4x4 game drive',
       'Serengeti luxury mobile camp during migration season',
@@ -356,7 +356,7 @@ export const destinations: Destination[] = [
     ],
     bestTimeToVisit: ['June', 'July', 'August', 'September', 'October', 'November', 'December'],
     duration: '7-10 days',
-    startingPrice: 4500,
+    startingPrice: 375000,
     highlights: [
       'Northern Lights viewing away from city lights with astronomers',
       'Blue Lagoon and Sky Lagoon geothermal luxury bathing',
@@ -398,7 +398,7 @@ export const destinations: Destination[] = [
     ],
     bestTimeToVisit: ['December', 'January', 'February', 'March', 'April'],
     duration: '8-12 days',
-    startingPrice: 2200,
+    startingPrice: 180000,
     highlights: [
       'Sigiriya Lion Rock fortress sunrise climb',
       'Observation carriage train ride through Nuwara Eliya tea country',

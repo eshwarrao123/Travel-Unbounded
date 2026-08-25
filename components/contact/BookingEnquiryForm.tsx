@@ -250,13 +250,13 @@ export default function BookingEnquiryForm() {
       onSubmit={handleSubmit}
       noValidate
       aria-label="Booking Enquiry Form"
-      className="bg-white border border-[var(--color-border)] p-6 md:p-10 rounded-xl shadow-sm space-y-6"
+      className="bg-white border border-[var(--color-border)] p-6 md:p-10 space-y-6"
     >
-      <div className="border-b border-[var(--color-border)] pb-4 mb-2">
+      <div className="border-b border-[var(--color-border)] pb-6 mb-2">
         <h3 className="heading-subsection text-[var(--color-text-primary)]">
           Plan Your Travel Enquiry
         </h3>
-        <p className="body-small text-[var(--color-text-secondary)]">
+        <p className="body-small text-[var(--color-text-secondary)] mt-2">
           Fill out the details below and our travel concierge will tailor a custom itinerary for you.
         </p>
       </div>
@@ -271,7 +271,7 @@ export default function BookingEnquiryForm() {
       )}
 
       {/* Full Name */}
-      <div className="space-y-1.5">
+      <div className="space-y-2">
         <label
           htmlFor={`${formId}-fullName`}
           className="block text-xs uppercase tracking-wider font-semibold text-[var(--color-text-primary)]"
@@ -288,28 +288,28 @@ export default function BookingEnquiryForm() {
           placeholder="e.g. Ananya Sharma"
           aria-invalid={!!(touched.fullName && errors.fullName)}
           aria-describedby={touched.fullName && errors.fullName ? `${formId}-fullName-error` : undefined}
-          className={`w-full px-4 py-3 rounded-lg border text-sm text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
+          className={`w-full px-4 py-3.5 rounded-lg border text-sm text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
             touched.fullName && errors.fullName
               ? 'border-red-500 bg-red-50/30'
               : 'border-gray-300 focus:border-[var(--color-accent)]'
           }`}
         />
         {touched.fullName && errors.fullName && (
-          <p id={`${formId}-fullName-error`} className="text-xs text-red-600 flex items-center gap-1 mt-1">
+          <p id={`${formId}-fullName-error`} className="text-xs text-red-600 flex items-center gap-1 mt-1.5">
             <span>⚠️</span> {errors.fullName}
           </p>
         )}
       </div>
 
       {/* Contact Number with Country Code */}
-      <div className="space-y-1.5">
+      <div className="space-y-2">
         <label
           htmlFor={`${formId}-contactNumber`}
           className="block text-xs uppercase tracking-wider font-semibold text-[var(--color-text-primary)]"
         >
           Contact Number <span className="text-red-500">*</span>
         </label>
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           {/* Country Code Select */}
           <div className="relative w-36 shrink-0">
             <select
@@ -318,7 +318,7 @@ export default function BookingEnquiryForm() {
               value={formData.countryCode}
               onChange={handleChange}
               aria-label="Country Code"
-              className="w-full px-3 py-3 rounded-lg border border-gray-300 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] font-medium"
+              className="w-full px-3 py-3.5 rounded-lg border border-gray-300 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] font-medium"
             >
               {countryCodes.map((item) => (
                 <option key={item.code} value={item.code}>
@@ -340,7 +340,7 @@ export default function BookingEnquiryForm() {
               placeholder="e.g. 9876543210"
               aria-invalid={!!(touched.contactNumber && errors.contactNumber)}
               aria-describedby={touched.contactNumber && errors.contactNumber ? `${formId}-contactNumber-error` : undefined}
-              className={`w-full px-4 py-3 rounded-lg border text-sm text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
+              className={`w-full px-4 py-3.5 rounded-lg border text-sm text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
                 touched.contactNumber && errors.contactNumber
                   ? 'border-red-500 bg-red-50/30'
                   : 'border-gray-300 focus:border-[var(--color-accent)]'
@@ -349,14 +349,14 @@ export default function BookingEnquiryForm() {
           </div>
         </div>
         {touched.contactNumber && errors.contactNumber && (
-          <p id={`${formId}-contactNumber-error`} className="text-xs text-red-600 flex items-center gap-1 mt-1">
+          <p id={`${formId}-contactNumber-error`} className="text-xs text-red-600 flex items-center gap-1 mt-1.5">
             <span>⚠️</span> {errors.contactNumber}
           </p>
         )}
       </div>
 
       {/* Email */}
-      <div className="space-y-1.5">
+      <div className="space-y-2">
         <label
           htmlFor={`${formId}-email`}
           className="block text-xs uppercase tracking-wider font-semibold text-[var(--color-text-primary)]"
@@ -373,21 +373,21 @@ export default function BookingEnquiryForm() {
           placeholder="e.g. ananya@example.com"
           aria-invalid={!!(touched.email && errors.email)}
           aria-describedby={touched.email && errors.email ? `${formId}-email-error` : undefined}
-          className={`w-full px-4 py-3 rounded-lg border text-sm text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
+          className={`w-full px-4 py-3.5 rounded-lg border text-sm text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
             touched.email && errors.email
               ? 'border-red-500 bg-red-50/30'
               : 'border-gray-300 focus:border-[var(--color-accent)]'
           }`}
         />
         {touched.email && errors.email && (
-          <p id={`${formId}-email-error`} className="text-xs text-red-600 flex items-center gap-1 mt-1">
+          <p id={`${formId}-email-error`} className="text-xs text-red-600 flex items-center gap-1 mt-1.5">
             <span>⚠️</span> {errors.email}
           </p>
         )}
       </div>
 
       {/* Date of Travel */}
-      <div className="space-y-1.5">
+      <div className="space-y-2">
         <label
           htmlFor={`${formId}-dateOfTravel`}
           className="block text-xs uppercase tracking-wider font-semibold text-[var(--color-text-primary)]"
@@ -404,23 +404,23 @@ export default function BookingEnquiryForm() {
           onBlur={() => handleBlur('dateOfTravel')}
           aria-invalid={!!(touched.dateOfTravel && errors.dateOfTravel)}
           aria-describedby={touched.dateOfTravel && errors.dateOfTravel ? `${formId}-dateOfTravel-error` : undefined}
-          className={`w-full px-4 py-3 rounded-lg border text-sm text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
+          className={`w-full px-4 py-3.5 rounded-lg border text-sm text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
             touched.dateOfTravel && errors.dateOfTravel
               ? 'border-red-500 bg-red-50/30'
               : 'border-gray-300 focus:border-[var(--color-accent)]'
           }`}
         />
         {touched.dateOfTravel && errors.dateOfTravel && (
-          <p id={`${formId}-dateOfTravel-error`} className="text-xs text-red-600 flex items-center gap-1 mt-1">
+          <p id={`${formId}-dateOfTravel-error`} className="text-xs text-red-600 flex items-center gap-1 mt-1.5">
             <span>⚠️</span> {errors.dateOfTravel}
           </p>
         )}
       </div>
 
       {/* Grid: Number of People & Hotel Category */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Number of People */}
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <label
             htmlFor={`${formId}-numberOfPeople`}
             className="block text-xs uppercase tracking-wider font-semibold text-[var(--color-text-primary)]"
@@ -437,21 +437,21 @@ export default function BookingEnquiryForm() {
             onBlur={() => handleBlur('numberOfPeople')}
             aria-invalid={!!(touched.numberOfPeople && errors.numberOfPeople)}
             aria-describedby={touched.numberOfPeople && errors.numberOfPeople ? `${formId}-numberOfPeople-error` : undefined}
-            className={`w-full px-4 py-3 rounded-lg border text-sm text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
+            className={`w-full px-4 py-3.5 rounded-lg border text-sm text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
               touched.numberOfPeople && errors.numberOfPeople
                 ? 'border-red-500 bg-red-50/30'
                 : 'border-gray-300 focus:border-[var(--color-accent)]'
             }`}
           />
           {touched.numberOfPeople && errors.numberOfPeople && (
-            <p id={`${formId}-numberOfPeople-error`} className="text-xs text-red-600 flex items-center gap-1 mt-1">
+            <p id={`${formId}-numberOfPeople-error`} className="text-xs text-red-600 flex items-center gap-1 mt-1.5">
               <span>⚠️</span> {errors.numberOfPeople}
             </p>
           )}
         </div>
 
         {/* Hotel Category */}
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <label
             htmlFor={`${formId}-hotelCategory`}
             className="block text-xs uppercase tracking-wider font-semibold text-[var(--color-text-primary)]"
@@ -466,7 +466,7 @@ export default function BookingEnquiryForm() {
             onBlur={() => handleBlur('hotelCategory')}
             aria-invalid={!!(touched.hotelCategory && errors.hotelCategory)}
             aria-describedby={touched.hotelCategory && errors.hotelCategory ? `${formId}-hotelCategory-error` : undefined}
-            className={`w-full px-4 py-3 rounded-lg border text-sm text-gray-900 bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
+            className={`w-full px-4 py-3.5 rounded-lg border text-sm text-gray-900 bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
               touched.hotelCategory && errors.hotelCategory
                 ? 'border-red-500 bg-red-50/30'
                 : 'border-gray-300 focus:border-[var(--color-accent)]'
@@ -478,7 +478,7 @@ export default function BookingEnquiryForm() {
             <option value="Luxury">Luxury (5★ Sanctuary)</option>
           </select>
           {touched.hotelCategory && errors.hotelCategory && (
-            <p id={`${formId}-hotelCategory-error`} className="text-xs text-red-600 flex items-center gap-1 mt-1">
+            <p id={`${formId}-hotelCategory-error`} className="text-xs text-red-600 flex items-center gap-1 mt-1.5">
               <span>⚠️</span> {errors.hotelCategory}
             </p>
           )}
@@ -486,7 +486,7 @@ export default function BookingEnquiryForm() {
       </div>
 
       {/* Number of Children */}
-      <div className="space-y-1.5">
+      <div className="space-y-2">
         <label
           htmlFor={`${formId}-numberOfChildren`}
           className="block text-xs uppercase tracking-wider font-semibold text-[var(--color-text-primary)]"
@@ -503,25 +503,25 @@ export default function BookingEnquiryForm() {
           onBlur={() => handleBlur('numberOfChildren')}
           aria-invalid={!!(touched.numberOfChildren && errors.numberOfChildren)}
           aria-describedby={touched.numberOfChildren && errors.numberOfChildren ? `${formId}-numberOfChildren-error` : undefined}
-          className={`w-full px-4 py-3 rounded-lg border text-sm text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
+          className={`w-full px-4 py-3.5 rounded-lg border text-sm text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
             touched.numberOfChildren && errors.numberOfChildren
               ? 'border-red-500 bg-red-50/30'
               : 'border-gray-300 focus:border-[var(--color-accent)]'
           }`}
         />
         {touched.numberOfChildren && errors.numberOfChildren && (
-          <p id={`${formId}-numberOfChildren-error`} className="text-xs text-red-600 flex items-center gap-1 mt-1">
+          <p id={`${formId}-numberOfChildren-error`} className="text-xs text-red-600 flex items-center gap-1 mt-1.5">
             <span>⚠️</span> {errors.numberOfChildren}
           </p>
         )}
       </div>
 
       {/* Submit Action Button */}
-      <div className="pt-4">
+      <div className="pt-6">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="btn btn-primary w-full py-3.5 text-sm font-semibold tracking-wider uppercase flex items-center justify-center gap-2 shadow-md hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed transition-all"
+          className="btn btn-primary w-full py-4 text-sm font-semibold tracking-wider uppercase flex items-center justify-center gap-2 shadow-md hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed transition-all"
         >
           {isSubmitting ? (
             <>
