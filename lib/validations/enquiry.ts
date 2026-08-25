@@ -72,7 +72,7 @@ export function validateEnquiry(payload: EnquiryPayload): ValidationResult {
   }
 
   // dateOfTravel validation
-  if (!payload.dateOfTravel) {
+  if (!payload.dateOfTravel || typeof payload.dateOfTravel !== 'string') {
     errors.dateOfTravel = 'Date of travel is required.';
   } else {
     const travelDate = new Date(payload.dateOfTravel);
