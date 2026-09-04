@@ -10,6 +10,7 @@
     "seed:admin": "node scripts/seed-admin.mjs"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "bcryptjs": "^3.0.3",
     "jose": "^6.2.11",
     "mongoose": "^9.9.3",
