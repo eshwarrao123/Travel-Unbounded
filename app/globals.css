@@ -217,3 +217,488 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   CHAT WIDGET — Travel Unbounded AI Travel Planner
+   All chat UI styles isolated below this line.
+   No new color tokens introduced; uses existing design system.
+───────────────────────────────────────────────────────────────*/
+
+/* ── Floating Trigger ─────────────────────────────────────── */
+
+.chat-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.125rem;
+  background: var(--color-text-primary);
+  color: #ffffff;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background 160ms ease, box-shadow 160ms ease;
+}
+
+.chat-trigger-btn:hover {
+  background: var(--color-accent);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.chat-trigger-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* ── Panel ────────────────────────────────────────────────── */
+
+.chat-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  width: min(400px, calc(100vw - 2rem));
+  height: min(580px, calc(100dvh - 6.5rem));
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10), 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+
+.chat-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1rem;
+  background: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.chat-header-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.chat-header-sub {
+  font-size: 0.6875rem;
+  color: var(--color-text-tertiary);
+  margin-top: 0.125rem;
+  letter-spacing: 0.01em;
+}
+
+/* ── Header Icon Buttons ──────────────────────────────────── */
+
+.chat-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.875rem;
+  height: 1.875rem;
+  color: var(--color-text-tertiary);
+  background: transparent;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: color 140ms ease, background 140ms ease;
+}
+
+.chat-icon-btn:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+}
+
+.chat-icon-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.chat-icon-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ── Message List ─────────────────────────────────────────── */
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: var(--color-bg-primary);
+  /* Thin scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) transparent;
+}
+
+.chat-messages::-webkit-scrollbar       { width: 4px; }
+.chat-messages::-webkit-scrollbar-track { background: transparent; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 2px; }
+
+/* ── Message Rows ─────────────────────────────────────────── */
+
+.chat-msg-row {
+  display: flex;
+  max-width: 100%;
+}
+
+.chat-msg-row--user {
+  justify-content: flex-end;
+}
+
+.chat-msg-row--assistant {
+  flex-direction: column;
+  gap: 0.625rem;
+  align-items: flex-start;
+}
+
+/* User message: right-aligned, dark background, no bubble radius */
+.chat-msg-user {
+  max-width: 80%;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-text-primary);
+  color: #fff;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  border-radius: 0.25rem 0.25rem 0 0.25rem;
+  word-break: break-word;
+}
+
+/* Assistant message: left-aligned, subtle left accent border, no heavy bubble */
+.chat-msg-assistant {
+  max-width: 92%;
+  padding: 0;
+  padding-left: 0.625rem;
+  border-left: 2px solid var(--color-border-strong);
+  color: var(--color-text-primary);
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  word-break: break-word;
+}
+
+/* Itinerary card — separated but not boxed in */
+.chat-itinerary-wrapper {
+  width: 100%;
+  border-top: 1px solid var(--color-border);
+  padding-top: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* ── Error Banner ─────────────────────────────────────────── */
+
+.chat-error {
+  padding: 0.625rem 0.75rem;
+  background: #fef9f9;
+  border: 1px solid #f5c6c6;
+  border-left: 3px solid #c53030;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  color: #7f1d1d;
+  line-height: 1.5;
+}
+
+.chat-error-dismiss {
+  display: inline;
+  margin-top: 0.375rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #7f1d1d;
+  font-size: 0.6875rem;
+  text-decoration: underline;
+  opacity: 0.6;
+  padding: 0;
+  transition: opacity 120ms ease;
+}
+
+.chat-error-dismiss:hover { opacity: 1; }
+
+/* ── Quick Reply Chips ────────────────────────────────────── */
+
+.chat-chips {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  padding: 0.625rem 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.chat-chip {
+  padding: 0.3125rem 0.75rem;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 400;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 0.1875rem;
+  cursor: pointer;
+  transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+  white-space: nowrap;
+}
+
+.chat-chip:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: var(--color-accent-light);
+}
+
+.chat-chip:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ── Composer ─────────────────────────────────────────────── */
+
+.chat-composer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg-primary);
+}
+
+.chat-input {
+  flex: 1;
+  resize: none;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 0.25rem;
+  min-height: 2.25rem;
+  max-height: 6rem;
+  overflow-y: auto;
+  transition: border-color 140ms ease;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) transparent;
+}
+
+.chat-input::placeholder { color: var(--color-text-tertiary); }
+.chat-input:focus         { outline: none; border-color: var(--color-accent); }
+.chat-input:disabled      { opacity: 0.45; cursor: not-allowed; }
+
+.chat-send-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  background: var(--color-accent);
+  color: #ffffff;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background 140ms ease;
+}
+
+.chat-send-btn:hover:not(:disabled) { background: var(--color-accent-hover); }
+
+.chat-send-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.chat-send-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ── Typing Indicator ─────────────────────────────────────── */
+
+.chat-typing {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-left: 0.625rem;
+  border-left: 2px solid var(--color-border-strong);
+}
+
+.chat-typing-label {
+  font-size: 0.6875rem;
+  color: var(--color-text-tertiary);
+  letter-spacing: 0.01em;
+}
+
+.chat-typing-dots {
+  display: inline-flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.chat-typing-dots span {
+  display: block;
+  width: 0.25rem;
+  height: 0.25rem;
+  border-radius: 50%;
+  background: var(--color-text-tertiary);
+  animation: chatDot 1.2s ease-in-out infinite;
+}
+
+.chat-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.chat-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes chatDot {
+  0%, 80%, 100% { transform: scale(0.65); opacity: 0.3; }
+  40%            { transform: scale(1);    opacity: 0.8; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ITINERARY DISPLAY — Editorial Travel-Plan Layout
+───────────────────────────────────────────────────────────────*/
+
+.itin {
+  width: 100%;
+}
+
+/* Trip header */
+.itin-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.25rem;
+}
+
+.itin-meta {
+  font-size: 0.6875rem;
+  color: var(--color-text-tertiary);
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.75rem;
+}
+
+/* Day list */
+.itin-days {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Each day row — left timeline + content */
+.itin-day {
+  display: flex;
+  gap: 0.875rem;
+  padding-bottom: 1rem;
+}
+
+.itin-day:last-child { padding-bottom: 0; }
+
+/* Left column: day number + vertical spine */
+.itin-day-label {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 1.75rem;
+}
+
+.itin-day-num {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+  line-height: 1;
+  margin-bottom: 0.375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Vertical timeline spine connecting days */
+.itin-day-spine {
+  flex: 1;
+  width: 1px;
+  background: var(--color-border);
+  min-height: 1rem;
+}
+
+.itin-day:last-child .itin-day-spine {
+  display: none;
+}
+
+/* Right column: content */
+.itin-day-content {
+  flex: 1;
+  min-width: 0;
+  padding-top: 0;
+}
+
+.itin-day-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.35;
+  margin-bottom: 0.25rem;
+}
+
+.itin-day-highlight {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  line-height: 1.45;
+  margin-bottom: 0.5rem;
+}
+
+.itin-activities {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.itin-activity {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.itin-activity-dot {
+  flex-shrink: 0;
+  width: 0.1875rem;
+  height: 0.1875rem;
+  border-radius: 50%;
+  background: var(--color-border-strong);
+  margin-top: 0.4375rem;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Mobile — intentional adjustments for narrow viewports
+───────────────────────────────────────────────────────────────*/
+
+@media (max-width: 480px) {
+  .chat-panel {
+    width: calc(100vw - 1.5rem);
+    height: calc(100dvh - 6rem);
+    border-radius: 0.25rem;
+  }
+
+  .chat-msg-user   { max-width: 88%; }
+  .chat-msg-assistant { max-width: 100%; }
+
+  .itin-day-num    { font-size: 0.5625rem; }
+  .itin-day-label  { width: 1.5rem; }
+}
+

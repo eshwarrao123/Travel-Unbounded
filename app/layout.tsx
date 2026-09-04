@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
+import ChatWidgetPublic from "@/components/chat/ChatWidgetPublic";
 
 export const metadata: Metadata = {
   title: "Travel Unbounded - Extraordinary Journeys Await",
@@ -22,6 +23,7 @@ export default function RootLayout({
           {children}
         </div>
         <Footer />
+        <ChatWidgetPublic />
       </body>
     </html>
   );
