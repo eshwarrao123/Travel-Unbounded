@@ -1,4 +1,5 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
+import { EnquiryStatus, ALLOWED_ENQUIRY_STATUSES } from '@/types/enquiry';
 
 export interface IEnquiry extends Document {
   fullName: string;
@@ -9,7 +10,9 @@ export interface IEnquiry extends Document {
   numberOfPeople: number;
   hotelCategory: string;
   numberOfChildren?: number;
+  status: EnquiryStatus;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 const EnquirySchema: Schema = new Schema({
@@ -53,14 +56,31 @@ const EnquirySchema: Schema = new Schema({
     default: 0,
     min: 0,
   },
+  status: {
+    type: String,
+    enum: ALLOWED_ENQUIRY_STATUSES,
+    default: 'New',
+    required: true,
+    index: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
     required: true,
+    index: true,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
   },
 });
+
+// Optimization indexes for admin search, status filtering, and chronological sorting
+EnquirySchema.index({ createdAt: -1 });
+EnquirySchema.index({ email: 1 });
 
 // Use existing model if it exists, otherwise create a new one
 const Enquiry: Model<IEnquiry> = mongoose.models.Enquiry || mongoose.model<IEnquiry>('Enquiry', EnquirySchema);
 
 export default Enquiry;
+
