@@ -1,9 +1,9 @@
-import { getIndiaDestinations } from '@/lib/destinations';
+﻿import { getIndiaDestinations } from '@/lib/destinations';
 import DestinationCard from '@/components/destinations/DestinationCard';
 import Link from 'next/link';
 
-export default function IndiaDestinations() {
-  const indiaDestinations = getIndiaDestinations();
+export default async function IndiaDestinations() {
+  const indiaDestinations = await getIndiaDestinations();
 
   return (
     <section className="py-14 md:py-20 bg-[var(--color-bg-primary)] border-b border-[var(--color-border)]">
@@ -25,7 +25,7 @@ export default function IndiaDestinations() {
             href="/destinations"
             className="text-sm font-medium text-[var(--color-accent)] hover:underline shrink-0"
           >
-            View all →
+            View all â†’
           </Link>
         </div>
 

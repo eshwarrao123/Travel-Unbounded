@@ -1,9 +1,9 @@
-import Image from 'next/image';
+﻿import Image from 'next/image';
 import Link from 'next/link';
 import { getAllDestinations } from '@/lib/destinations';
 
-export default function FeaturedDestinations() {
-  const destinations = getAllDestinations().slice(0, 4);
+export default async function FeaturedDestinations() {
+  const destinations = (await getAllDestinations()).slice(0, 4);
   const featured = destinations.find(d => d.featured);
   const others = destinations.filter(d => !d.featured);
 

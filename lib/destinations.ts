@@ -1,84 +1,65 @@
-import { destinations } from '@/data/destinations';
-import { Destination, Region, TravelStyle } from './types';
+﻿import { cache } from 'react';
+import connectToDatabase from '@/lib/mongodb';
+import DestinationModel, {
+  DestinationDocumentData,
+  serializeDestination,
+} from '@/models/Destination';
+import { Destination } from './types';
 
 /**
- * Get all destinations
+ * Database-backed destination catalog (Phase 2 — Destination CMS).
+ *
+ * The public site previously read the static dataset in data/destinations.ts.
+ * Every accessor below now reads from MongoDB via the shared connection helper.
+ * `cache()` dedupes the catalog query within a single server render pass, so a
+ * page rendering multiple destination sections still issues one DB query.
+ *
+ * The original static file is kept untouched as the migration seed source.
  */
-export function getAllDestinations(): Destination[] {
-  return destinations;
-}
+
+/** Get all destinations (single deduplicated query per render pass). */
+export const getAllDestinations = cache(async (): Promise<Destination[]> => {
+  await connectToDatabase();
+  const docs = await DestinationModel.find()
+    .sort({ category: 1, createdAt: 1, _id: 1 })
+    .lean();
+  return docs.map((doc) =>
+    serializeDestination(
+      doc as unknown as DestinationDocumentData
+    ) as unknown as Destination
+  );
+});
 
 /**
  * Get featured destinations
  */
-export function getFeaturedDestinations(): Destination[] {
-  return destinations.filter(dest => dest.featured);
+export async function getFeaturedDestinations(): Promise<Destination[]> {
+  const all = await getAllDestinations();
+  return all.filter((dest) => dest.featured);
 }
 
 /**
  * Get India destinations
  */
-export function getIndiaDestinations(): Destination[] {
-  return destinations.filter(dest => dest.category === 'india');
+export async function getIndiaDestinations(): Promise<Destination[]> {
+  const all = await getAllDestinations();
+  return all.filter((dest) => dest.category === 'india');
 }
 
 /**
  * Get International destinations
  */
-export function getInternationalDestinations(): Destination[] {
-  return destinations.filter(dest => dest.category === 'international');
+export async function getInternationalDestinations(): Promise<Destination[]> {
+  const all = await getAllDestinations();
+  return all.filter((dest) => dest.category === 'international');
 }
 
 /**
  * Get destination by slug
  */
-export function getDestinationBySlug(slug: string): Destination | undefined {
-  return destinations.find(dest => dest.slug === slug);
-}
-
-/**
- * Get destinations by region
- */
-export function getDestinationsByRegion(region: Region): Destination[] {
-  return destinations.filter(dest => dest.region === region);
-}
-
-/**
- * Get destinations by travel style
- */
-export function getDestinationsByTravelStyle(style: TravelStyle): Destination[] {
-  return destinations.filter(dest => dest.travelStyle.includes(style));
-}
-
-/**
- * Get all unique regions
- */
-export function getAllRegions(): Region[] {
-  const regions = new Set(destinations.map(dest => dest.region as Region));
-  return Array.from(regions);
-}
-
-/**
- * Get all unique travel styles
- */
-export function getAllTravelStyles(): TravelStyle[] {
-  const styles = new Set<TravelStyle>();
-  destinations.forEach(dest => {
-    dest.travelStyle.forEach(style => styles.add(style));
-  });
-  return Array.from(styles);
-}
-
-/**
- * Search destinations by name or description
- */
-export function searchDestinations(query: string): Destination[] {
-  const lowercaseQuery = query.toLowerCase();
-  return destinations.filter(
-    dest =>
-      dest.name.toLowerCase().includes(lowercaseQuery) ||
-      dest.country.toLowerCase().includes(lowercaseQuery) ||
-      dest.description.toLowerCase().includes(lowercaseQuery) ||
-      dest.shortDescription.toLowerCase().includes(lowercaseQuery)
-  );
+export async function getDestinationBySlug(
+  slug: string
+): Promise<Destination | undefined> {
+  const all = await getAllDestinations();
+  return all.find((dest) => dest.slug === slug);
 }

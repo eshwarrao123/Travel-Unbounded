@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+﻿import { Metadata } from 'next';
 import Link from 'next/link';
 import { getIndiaDestinations, getInternationalDestinations } from '@/lib/destinations';
 import DestinationCard from '@/components/destinations/DestinationCard';
@@ -9,9 +9,12 @@ export const metadata: Metadata = {
   keywords: 'travel destinations, India travel, international safaris, experiential travel, Kerala, Kenya, Iceland, Ladakh',
 };
 
-export default function DestinationsPage() {
-  const indiaDestinations = getIndiaDestinations();
-  const internationalDestinations = getInternationalDestinations();
+// Destinations are read from MongoDB; render per request so CMS edits appear immediately.
+export const dynamic = 'force-dynamic';
+
+export default async function DestinationsPage() {
+  const indiaDestinations = await getIndiaDestinations();
+  const internationalDestinations = await getInternationalDestinations();
 
   return (
     <main className="page-top">
@@ -26,7 +29,7 @@ export default function DestinationsPage() {
               Extraordinary Destinations
             </h1>
             <p className="body-large text-[var(--color-text-secondary)] max-w-2xl">
-              Every destination we offer has been personally explored and curated by our travel experts. These aren&apos;t just places — they&apos;re transformative experiences waiting to unfold.
+              Every destination we offer has been personally explored and curated by our travel experts. These aren&apos;t just places â€” they&apos;re transformative experiences waiting to unfold.
             </p>
           </div>
         </div>
@@ -46,7 +49,7 @@ export default function DestinationsPage() {
               India Destinations
             </h2>
             <p className="body text-[var(--color-text-secondary)] max-w-2xl">
-              From palm-fringed backwater sanctuaries to snow-capped Himalayan passes — immersive journeys across India.
+              From palm-fringed backwater sanctuaries to snow-capped Himalayan passes â€” immersive journeys across India.
             </p>
           </div>
 
@@ -76,7 +79,7 @@ export default function DestinationsPage() {
               International Destinations
             </h2>
             <p className="body text-[var(--color-text-secondary)] max-w-2xl">
-              Bespoke global frontiers — from the wild Mara savannahs to emerald bays and volcanic Arctic springs.
+              Bespoke global frontiers â€” from the wild Mara savannahs to emerald bays and volcanic Arctic springs.
             </p>
           </div>
 

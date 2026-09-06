@@ -25,7 +25,7 @@ export default function ImageGallery({ images, destinationName }: ImageGalleryPr
       </div>
 
       {/* Thumbnails */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {images.map((image, index) => (
           <button
             key={index}
@@ -40,7 +40,7 @@ export default function ImageGallery({ images, destinationName }: ImageGalleryPr
               alt={`${destinationName} thumbnail ${index + 1}`}
               fill
               className="object-cover"
-              sizes="(max-width: 768px) 25vw, 300px"
+              sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
             />
           </button>
         ))}

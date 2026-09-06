@@ -1,9 +1,9 @@
-import { getInternationalDestinations } from '@/lib/destinations';
+﻿import { getInternationalDestinations } from '@/lib/destinations';
 import DestinationCard from '@/components/destinations/DestinationCard';
 import Link from 'next/link';
 
-export default function InternationalDestinations() {
-  const internationalDestinations = getInternationalDestinations();
+export default async function InternationalDestinations() {
+  const internationalDestinations = await getInternationalDestinations();
 
   return (
     <section className="py-14 md:py-20 bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)]">
@@ -25,7 +25,7 @@ export default function InternationalDestinations() {
             href="/destinations"
             className="text-sm font-medium text-[var(--color-accent)] hover:underline shrink-0"
           >
-            View all →
+            View all â†’
           </Link>
         </div>
 

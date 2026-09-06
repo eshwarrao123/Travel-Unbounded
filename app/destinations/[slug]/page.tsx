@@ -1,7 +1,7 @@
-import { Metadata } from 'next';
+﻿import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getDestinationBySlug, getAllDestinations } from '@/lib/destinations';
+import { getDestinationBySlug } from '@/lib/destinations';
 import DestinationHero from '@/components/destinations/DestinationHero';
 import DestinationMeta from '@/components/destinations/DestinationMeta';
 import ExperienceList from '@/components/destinations/ExperienceList';
@@ -11,16 +11,12 @@ interface DestinationPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  const destinations = getAllDestinations();
-  return destinations.map((destination) => ({
-    slug: destination.slug,
-  }));
-}
+// Destinations are read from MongoDB; render per request so CMS edits appear immediately.
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: DestinationPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const destination = getDestinationBySlug(slug);
+  const destination = await getDestinationBySlug(slug);
 
   if (!destination) {
     return {
@@ -37,7 +33,7 @@ export async function generateMetadata({ params }: DestinationPageProps): Promis
 
 export default async function DestinationPage({ params }: DestinationPageProps) {
   const { slug } = await params;
-  const destination = getDestinationBySlug(slug);
+  const destination = await getDestinationBySlug(slug);
 
   if (!destination) {
     notFound();
@@ -73,6 +69,7 @@ export default async function DestinationPage({ params }: DestinationPageProps) 
               </p>
 
               {/* Travel Styles */}
+              {destination.travelStyle.length > 0 && (
               <div className="mb-8">
                 <h3 className="heading-subsection text-[var(--color-text-primary)] mb-4">
                   Travel Style
@@ -88,8 +85,10 @@ export default async function DestinationPage({ params }: DestinationPageProps) 
                   ))}
                 </div>
               </div>
+              )}
 
               {/* Highlights */}
+              {destination.highlights.length > 0 && (
               <div>
                 <h3 className="heading-subsection text-[var(--color-text-primary)] mb-4">
                   Highlights
@@ -103,6 +102,7 @@ export default async function DestinationPage({ params }: DestinationPageProps) 
                   ))}
                 </ul>
               </div>
+              )}
             </div>
 
             {/* Sidebar */}
@@ -162,6 +162,7 @@ export default async function DestinationPage({ params }: DestinationPageProps) 
       </section>
 
       {/* Experiences */}
+      {destination.experiences.length > 0 && (
       <section className="py-16 md:py-24 bg-[var(--color-bg-secondary)]">
         <div className="container-content">
           <h2 className="heading-section text-[var(--color-text-primary)] mb-6">
@@ -173,8 +174,10 @@ export default async function DestinationPage({ params }: DestinationPageProps) 
           <ExperienceList experiences={destination.experiences} />
         </div>
       </section>
+      )}
 
       {/* Gallery */}
+      {destination.galleryImages.length > 0 && (
       <section className="py-16 md:py-24 bg-[var(--color-bg-primary)]">
         <div className="container-content">
           <h2 className="heading-section text-[var(--color-text-primary)] mb-12">
@@ -183,6 +186,7 @@ export default async function DestinationPage({ params }: DestinationPageProps) 
           <ImageGallery images={destination.galleryImages} destinationName={destination.name} />
         </div>
       </section>
+      )}
 
       {/* Final CTA */}
       <section className="py-16 md:py-24 bg-[var(--color-bg-secondary)]">
