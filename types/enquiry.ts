@@ -22,6 +22,9 @@ export interface AdminEnquiryItem {
   hotelCategory: string;
   numberOfChildren: number;
   status: EnquiryStatus;
+  destinationSlug?: string | null;
+  destinationName?: string | null;
+  destination?: string | null;
   createdAt: string;
   updatedAt?: string;
 }

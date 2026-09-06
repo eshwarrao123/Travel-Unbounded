@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 import Enquiry from '@/models/Enquiry';
+import Destination from '@/models/Destination';
 import {
   validateEnquiry,
   validateEnquiryQueryParams,
@@ -135,6 +136,9 @@ export async function GET(
         hotelCategory: doc.hotelCategory || 'Standard',
         numberOfChildren: doc.numberOfChildren ?? 0,
         status: fallbackStatus,
+        destinationSlug: doc.destinationSlug || null,
+        destinationName: doc.destinationName || null,
+        destination: doc.destinationName || doc.destinationSlug || null,
         createdAt: createdAtStr,
         ...(updatedAtStr ? { updatedAt: updatedAtStr } : {}),
       };
@@ -204,16 +208,46 @@ export async function POST(request: Request) {
     // 3. Connect to MongoDB
     await connectToDatabase();
 
-    // 4. Create an Enquiry document with initial 'New' status
-    const enquiry = new Enquiry({
+    // 4. If destinationSlug is provided, validate that destination exists in the catalog
+    let destinationName: string | undefined = undefined;
+    if (validation.data?.destinationSlug) {
+      const existingDestination = await Destination.findOne({
+        slug: validation.data.destinationSlug,
+      }).lean();
+
+      if (!existingDestination) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: {
+              code: 'INVALID_REQUEST',
+              message: 'The selected destination does not exist.',
+            },
+            message: 'The selected destination does not exist.',
+          },
+          { status: 400 }
+        );
+      }
+
+      destinationName = existingDestination.name;
+    }
+
+    // 5. Create an Enquiry document with initial 'New' status and destination snapshot
+    const enquiryData: Record<string, unknown> = {
       ...validation.data,
       status: 'New',
-    });
+    };
 
-    // 5. Save it
+    if (destinationName) {
+      enquiryData.destinationName = destinationName;
+    }
+
+    const enquiry = new Enquiry(enquiryData);
+
+    // 6. Save it
     await enquiry.save();
 
-    // 6. Return JSON response
+    // 7. Return JSON response
     return NextResponse.json(
       { success: true, message: 'Enquiry submitted successfully.' },
       { status: 201 }

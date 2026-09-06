@@ -11,6 +11,8 @@ export interface IEnquiry extends Document {
   hotelCategory: string;
   numberOfChildren?: number;
   status: EnquiryStatus;
+  destinationSlug?: string;
+  destinationName?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -63,6 +65,18 @@ const EnquirySchema: Schema = new Schema({
     required: true,
     index: true,
   },
+  destinationSlug: {
+    type: String,
+    trim: true,
+    lowercase: true,
+    index: true,
+    default: undefined,
+  },
+  destinationName: {
+    type: String,
+    trim: true,
+    default: undefined,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -78,9 +92,17 @@ const EnquirySchema: Schema = new Schema({
 // Optimization indexes for admin search, status filtering, and chronological sorting
 EnquirySchema.index({ createdAt: -1 });
 EnquirySchema.index({ email: 1 });
+EnquirySchema.index({ destinationSlug: 1 });
+
+// Ensure updated schema fields take effect across Next.js dev server reloads
+if (process.env.NODE_ENV !== 'production' && mongoose.models.Enquiry) {
+  delete (mongoose.models as Record<string, unknown>).Enquiry;
+}
 
 // Use existing model if it exists, otherwise create a new one
-const Enquiry: Model<IEnquiry> = mongoose.models.Enquiry || mongoose.model<IEnquiry>('Enquiry', EnquirySchema);
+const Enquiry: Model<IEnquiry> =
+  mongoose.models.Enquiry || mongoose.model<IEnquiry>('Enquiry', EnquirySchema);
 
 export default Enquiry;
+
 

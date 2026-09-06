@@ -284,6 +284,9 @@ export default function EnquiriesTable({
                     Customer
                   </th>
                   <th className="px-4 py-3 text-left font-semibold text-[var(--color-text-primary)] uppercase tracking-wider text-xs">
+                    Destination
+                  </th>
+                  <th className="px-4 py-3 text-left font-semibold text-[var(--color-text-primary)] uppercase tracking-wider text-xs">
                     Email
                   </th>
                   <th className="px-4 py-3 text-left font-semibold text-[var(--color-text-primary)] uppercase tracking-wider text-xs">
@@ -317,6 +320,9 @@ export default function EnquiriesTable({
                   >
                     <td className="px-4 py-3 text-[var(--color-text-primary)] font-medium">
                       {enquiry.fullName}
+                    </td>
+                    <td className="px-4 py-3 text-[var(--color-text-primary)]">
+                      {enquiry.destinationName || enquiry.destinationSlug || '—'}
                     </td>
                     <td className="px-4 py-3 text-[var(--color-text-secondary)]">
                       {enquiry.email}
@@ -393,6 +399,14 @@ export default function EnquiriesTable({
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div>
+                    <span className="text-xs text-[var(--color-text-tertiary)] uppercase tracking-wider">
+                      Destination
+                    </span>
+                    <p className="text-[var(--color-text-primary)] truncate">
+                      {enquiry.destinationName || enquiry.destinationSlug || '—'}
+                    </p>
+                  </div>
                   <div>
                     <span className="text-xs text-[var(--color-text-tertiary)] uppercase tracking-wider">
                       Travel Date
@@ -587,6 +601,15 @@ export default function EnquiriesTable({
                 </label>
                 <p className="text-sm text-[var(--color-text-primary)] mt-1">
                   {selectedEnquiry.hotelCategory}
+                </p>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium text-[var(--color-text-tertiary)] uppercase tracking-wider">
+                  Destination
+                </label>
+                <p className="text-sm text-[var(--color-text-primary)] mt-1 font-medium">
+                  {selectedEnquiry.destinationName || selectedEnquiry.destinationSlug || '—'}
                 </p>
               </div>
 

@@ -7,6 +7,7 @@ export interface EnquiryPayload {
   numberOfPeople: unknown;
   hotelCategory: unknown;
   numberOfChildren?: unknown;
+  destinationSlug?: unknown;
 }
 
 export interface ValidationResult {
@@ -131,6 +132,25 @@ export function validateEnquiry(payload: EnquiryPayload): ValidationResult {
     }
   } else {
     data.numberOfChildren = 0;
+  }
+
+  // destinationSlug validation (optional)
+  if (
+    payload.destinationSlug !== undefined &&
+    payload.destinationSlug !== null &&
+    payload.destinationSlug !== ''
+  ) {
+    if (typeof payload.destinationSlug !== 'string') {
+      errors.destinationSlug = 'Destination must be a string.';
+    } else {
+      const trimmedSlug = payload.destinationSlug.trim().toLowerCase();
+      const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+      if (!trimmedSlug || !slugRegex.test(trimmedSlug)) {
+        errors.destinationSlug = 'Invalid destination format.';
+      } else {
+        data.destinationSlug = trimmedSlug;
+      }
+    }
   }
 
   if (Object.keys(errors).length > 0) {

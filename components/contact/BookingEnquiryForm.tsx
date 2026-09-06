@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useId, FormEvent, ChangeEvent } from 'react';
+import { useState, useId, useEffect, FormEvent, ChangeEvent } from 'react';
 
 export interface BookingEnquiryFormData {
   fullName: string;
   countryCode: string;
   contactNumber: string;
   email: string;
+  destinationSlug: string;
   dateOfTravel: string;
   numberOfPeople: number | string;
   hotelCategory: 'Standard' | 'Deluxe' | 'Luxury' | '';
@@ -17,10 +18,17 @@ export interface FormErrors {
   fullName?: string;
   contactNumber?: string;
   email?: string;
+  destinationSlug?: string;
   dateOfTravel?: string;
   numberOfPeople?: string;
   hotelCategory?: string;
   numberOfChildren?: string;
+}
+
+export interface DestinationOption {
+  slug: string;
+  name: string;
+  category?: string;
 }
 
 export const countryCodes = [
@@ -52,11 +60,13 @@ export default function BookingEnquiryForm() {
   const formId = useId();
   const tomorrowString = getTomorrowString();
 
+  const [destinations, setDestinations] = useState<DestinationOption[]>([]);
   const [formData, setFormData] = useState<BookingEnquiryFormData>({
     fullName: '',
     countryCode: '+91',
     contactNumber: '',
     email: '',
+    destinationSlug: '',
     dateOfTravel: '',
     numberOfPeople: 1,
     hotelCategory: '',
@@ -68,6 +78,44 @@ export default function BookingEnquiryForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Fetch available database destinations for the dropdown
+  useEffect(() => {
+    let isMounted = true;
+    async function loadDestinations() {
+      try {
+        const response = await fetch('/api/destinations');
+        if (response.ok) {
+          const json = await response.json();
+          if (isMounted && json?.data?.destinations) {
+            const list: DestinationOption[] = json.data.destinations.map(
+              (d: { slug: string; name: string; category?: string }) => ({
+                slug: d.slug,
+                name: d.name,
+                category: d.category,
+              })
+            );
+            setDestinations(list);
+
+            // Pre-select if URL contains a destination or slug query param
+            if (typeof window !== 'undefined') {
+              const urlParams = new URLSearchParams(window.location.search);
+              const destParam = urlParams.get('destination') || urlParams.get('slug');
+              if (destParam && list.some((d) => d.slug === destParam.toLowerCase())) {
+                setFormData((prev) => ({ ...prev, destinationSlug: destParam.toLowerCase() }));
+              }
+            }
+          }
+        }
+      } catch {
+        // Fallback gracefully if destinations endpoint is unreachable
+      }
+    }
+    loadDestinations();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Validate single field or all fields
   const validate = (data: BookingEnquiryFormData): FormErrors => {
@@ -94,7 +142,12 @@ export default function BookingEnquiryForm() {
       newErrors.email = 'Please enter a valid email address.';
     }
 
-    // 4. Date of Travel (must be strictly in the future)
+    // 4. Destination
+    if (!data.destinationSlug || !data.destinationSlug.trim()) {
+      newErrors.destinationSlug = 'Please select a destination.';
+    }
+
+    // 5. Date of Travel (must be strictly in the future)
     if (!data.dateOfTravel) {
       newErrors.dateOfTravel = 'Please select your intended travel date.';
     } else {
@@ -107,18 +160,18 @@ export default function BookingEnquiryForm() {
       }
     }
 
-    // 5. Number of People
+    // 6. Number of People
     const peopleNum = Number(data.numberOfPeople);
     if (data.numberOfPeople === '' || isNaN(peopleNum) || peopleNum < 1) {
       newErrors.numberOfPeople = 'Number of travelers must be at least 1.';
     }
 
-    // 6. Hotel Category
+    // 7. Hotel Category
     if (!data.hotelCategory || !['Standard', 'Deluxe', 'Luxury'].includes(data.hotelCategory)) {
       newErrors.hotelCategory = 'Please select a hotel category.';
     }
 
-    // 7. Number of Children
+    // 8. Number of Children
     const childrenNum = Number(data.numberOfChildren);
     if (data.numberOfChildren !== '' && (isNaN(childrenNum) || childrenNum < 0)) {
       newErrors.numberOfChildren = 'Number of children cannot be negative.';
@@ -163,6 +216,7 @@ export default function BookingEnquiryForm() {
       fullName: true,
       contactNumber: true,
       email: true,
+      destinationSlug: true,
       dateOfTravel: true,
       numberOfPeople: true,
       hotelCategory: true,
@@ -186,7 +240,7 @@ export default function BookingEnquiryForm() {
     setIsSubmitting(true);
 
     try {
-      const payload = {
+      const payload: Record<string, unknown> = {
         fullName: formData.fullName,
         countryCode: formData.countryCode,
         contactNumber: formData.contactNumber,
@@ -196,6 +250,10 @@ export default function BookingEnquiryForm() {
         hotelCategory: formData.hotelCategory,
         numberOfChildren: formData.numberOfChildren ? Number(formData.numberOfChildren) : 0,
       };
+
+      if (formData.destinationSlug) {
+        payload.destinationSlug = formData.destinationSlug;
+      }
 
       const response = await fetch('/api/enquiry', {
         method: 'POST',
@@ -231,6 +289,7 @@ export default function BookingEnquiryForm() {
       countryCode: '+91',
       contactNumber: '',
       email: '',
+      destinationSlug: '',
       dateOfTravel: '',
       numberOfPeople: 1,
       hotelCategory: '',
@@ -241,6 +300,10 @@ export default function BookingEnquiryForm() {
     setIsSubmitted(false);
     setSubmitError(null);
   };
+
+  const selectedDestinationName =
+    destinations.find((d) => d.slug === formData.destinationSlug)?.name ||
+    formData.destinationSlug;
 
   if (isSubmitted) {
     return (
@@ -261,6 +324,9 @@ export default function BookingEnquiryForm() {
         </div>
 
         <div className="p-4 bg-gray-50 border border-gray-100 rounded-lg text-left max-w-sm mx-auto space-y-1 text-xs text-gray-600">
+          {selectedDestinationName && (
+            <p><strong className="text-gray-900">Destination:</strong> {selectedDestinationName}</p>
+          )}
           <p><strong className="text-gray-900">Contact:</strong> {formData.countryCode} {formData.contactNumber}</p>
           <p><strong className="text-gray-900">Email:</strong> {formData.email}</p>
           <p><strong className="text-gray-900">Travel Date:</strong> {formData.dateOfTravel}</p>
@@ -416,6 +482,42 @@ export default function BookingEnquiryForm() {
         {touched.email && errors.email && (
           <p id={`${formId}-email-error`} className="text-xs text-red-600 flex items-center gap-1 mt-1.5">
             <span>⚠️</span> {errors.email}
+          </p>
+        )}
+      </div>
+
+      {/* Destination Selection */}
+      <div className="space-y-2">
+        <label
+          htmlFor={`${formId}-destinationSlug`}
+          className="block text-xs uppercase tracking-wider font-semibold text-[var(--color-text-primary)]"
+        >
+          Destination <span className="text-red-500">*</span>
+        </label>
+        <select
+          id={`${formId}-destinationSlug`}
+          name="destinationSlug"
+          value={formData.destinationSlug}
+          onChange={handleChange}
+          onBlur={() => handleBlur('destinationSlug')}
+          aria-invalid={!!(touched.destinationSlug && errors.destinationSlug)}
+          aria-describedby={touched.destinationSlug && errors.destinationSlug ? `${formId}-destinationSlug-error` : undefined}
+          className={`w-full px-4 py-3.5 rounded-lg border text-sm text-gray-900 bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
+            touched.destinationSlug && errors.destinationSlug
+              ? 'border-red-500 bg-red-50/30'
+              : 'border-gray-300 focus:border-[var(--color-accent)]'
+          }`}
+        >
+          <option value="">Select a destination</option>
+          {destinations.map((dest) => (
+            <option key={dest.slug} value={dest.slug}>
+              {dest.name} {dest.category ? `(${dest.category === 'india' ? 'India' : 'International'})` : ''}
+            </option>
+          ))}
+        </select>
+        {touched.destinationSlug && errors.destinationSlug && (
+          <p id={`${formId}-destinationSlug-error`} className="text-xs text-red-600 flex items-center gap-1 mt-1.5">
+            <span>⚠️</span> {errors.destinationSlug}
           </p>
         )}
       </div>

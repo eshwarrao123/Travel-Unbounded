@@ -138,3 +138,4 @@
  DELETE /api/destinations/6a9d70cf05e6d6e70b4dfc08 404 in 69ms (next.js: 3ms, application-code: 66ms)
  GET /api/destinations 200 in 104ms (next.js: 4ms, application-code: 100ms)
  GET / 200 in 368ms (next.js: 3ms, application-code: 365ms)
+[?25h
