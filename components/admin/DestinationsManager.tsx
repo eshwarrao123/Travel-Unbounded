@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import {
@@ -24,7 +24,7 @@ export default function DestinationsManager() {
   const [deleteTarget, setDeleteTarget] = useState<DestinationApiItem | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  // Broken image tracking (fallback placeholders, no layout shift)
+  // Broken image tracking
   const [brokenImages, setBrokenImages] = useState<Record<string, boolean>>({});
 
   const loadDestinations = useCallback(async () => {
@@ -52,7 +52,7 @@ export default function DestinationsManager() {
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial data load
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial data load on mount
     loadDestinations();
   }, [loadDestinations]);
 
@@ -100,14 +100,13 @@ export default function DestinationsManager() {
     filter === 'all' ? destinations : destinations.filter((d) => d.category === filter);
 
   const formatPrice = (price: number) =>
-    price > 0 ? `₹${price.toLocaleString('en-IN')}` : '—';
+    price > 0 ? `₹${price.toLocaleString('en-IN')}` : 'Price on request';
 
-  // ------------------------------------------------------------ loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-12">
-        <div className="flex items-center gap-3 text-sm text-[var(--color-text-secondary)]">
-          <svg className="animate-spin h-5 w-5 text-[var(--color-accent)]" viewBox="0 0 24 24" fill="none">
+      <div className="flex items-center justify-center p-16">
+        <div className="flex items-center gap-3 text-xs text-[var(--color-text-secondary)]">
+          <svg className="animate-spin h-4 w-4 text-[var(--color-accent)]" viewBox="0 0 24 24" fill="none">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
           </svg>
@@ -121,52 +120,68 @@ export default function DestinationsManager() {
     <div className="space-y-6">
       {/* Error banner */}
       {error && (
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3.5 border border-red-200 bg-red-50 text-red-800 text-sm rounded">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3.5 border border-red-200 bg-red-50 text-red-800 text-xs rounded">
           <span>{error}</span>
           <button
             onClick={() => { setLoading(true); loadDestinations(); }}
-            className="shrink-0 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider border border-red-300 text-red-700 hover:bg-red-100 transition-colors rounded-sm cursor-pointer"
+            className="shrink-0 text-xs underline font-medium cursor-pointer"
           >
             Retry
           </button>
         </div>
       )}
 
-      {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex items-center gap-2">
+      {/* Editorial Toolbar */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white border border-[var(--color-border)] rounded p-3">
+        {/* Category Filter Tabs */}
+        <div className="flex items-center gap-1">
           {(['all', 'india', 'international'] as CategoryFilter[]).map((value) => (
             <button
               key={value}
               onClick={() => setFilter(value)}
-              className={`px-3 py-1.5 text-xs font-semibold uppercase tracking-wider border rounded-sm transition-colors cursor-pointer ${
+              className={`px-3 py-1.5 text-xs font-normal rounded transition-colors cursor-pointer ${
                 filter === value
-                  ? 'border-[var(--color-accent)] bg-[var(--color-accent-light)] text-[var(--color-accent)]'
-                  : 'border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-text-tertiary)]'
+                  ? 'bg-[var(--color-bg-secondary)] text-[var(--color-accent)] font-medium'
+                  : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
               }`}
             >
-              {value === 'all' ? 'All' : value === 'india' ? 'India' : 'International'}
+              {value === 'all' ? 'All Expeditions' : value === 'india' ? 'India' : 'International'}
             </button>
           ))}
         </div>
-        <button
-          onClick={() => {
-            setEditing(null);
-            setFormOpen(true);
-          }}
-          className="btn btn-primary py-2 px-4 text-sm w-full sm:w-auto cursor-pointer"
-        >
-          + Add Destination
-        </button>
+
+        {/* Counter & Action */}
+        <div className="flex items-center justify-between sm:justify-end gap-4">
+          <span className="text-xs text-[var(--color-text-tertiary)] font-mono">
+            {filtered.length} {filtered.length === 1 ? 'destination' : 'destinations'}
+          </span>
+          <button
+            onClick={() => {
+              setEditing(null);
+              setFormOpen(true);
+            }}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-normal text-white bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] rounded transition-colors cursor-pointer active:scale-[0.98]"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+            </svg>
+            <span>Add destination</span>
+          </button>
+        </div>
       </div>
 
-      {/* Empty state */}
+      {/* Empty State */}
       {filtered.length === 0 ? (
-        <div className="border border-dashed border-[var(--color-border)] p-12 text-center">
-          <p className="text-sm text-[var(--color-text-secondary)] mb-4">
+        <div className="bg-white border border-dashed border-[var(--color-border)] rounded p-12 text-center">
+          <p className="text-sm font-medium text-[var(--color-text-primary)] mb-1">
             {destinations.length === 0
-              ? 'No destinations yet. Add your first destination to publish it on the public site.'
-              : 'No destinations match this filter.'}
+              ? 'Catalog is empty'
+              : 'No destinations match this filter'}
+          </p>
+          <p className="text-xs text-[var(--color-text-secondary)] mb-4 max-w-sm mx-auto">
+            {destinations.length === 0
+              ? 'Publish your first journey to feature it on the public website.'
+              : 'Switch category tabs to view other published destinations.'}
           </p>
           {destinations.length === 0 && (
             <button
@@ -174,94 +189,100 @@ export default function DestinationsManager() {
                 setEditing(null);
                 setFormOpen(true);
               }}
-              className="btn btn-primary py-2 px-4 text-sm cursor-pointer"
+              className="text-xs font-medium text-[var(--color-accent)] hover:underline cursor-pointer"
             >
-              + Add Destination
+              + Create first destination
             </button>
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        /* Image-Led Destination Cards Grid */
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((d) => (
-            <div key={d.id} className="group flex flex-col bg-white border border-[var(--color-border)] overflow-hidden">
-              {/* Image preview */}
-              <div className="relative aspect-[3/2] w-full bg-[var(--color-bg-tertiary)] overflow-hidden">
+            <div
+              key={d.id}
+              className="group flex flex-col bg-white border border-[var(--color-border)] rounded overflow-hidden hover:border-[var(--color-border-strong)] transition-colors"
+            >
+              {/* Image Preview Container */}
+              <div className="relative aspect-[16/10] w-full bg-[var(--color-bg-tertiary)] overflow-hidden">
                 {brokenImages[d.id] ? (
                   <div className="absolute inset-0 flex items-center justify-center text-xs text-[var(--color-text-tertiary)]">
-                    Image unavailable
+                    Photograph unavailable
                   </div>
                 ) : (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={d.heroImage}
                     alt={d.name}
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-102 transition-transform duration-500 ease-out"
                     onError={() => setBrokenImages((prev) => ({ ...prev, [d.id]: true }))}
                   />
                 )}
-                <div className="absolute top-3 left-3 flex gap-2">
-                  <span className="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white bg-black/60 rounded-sm">
+
+                {/* Subtle Badges */}
+                <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+                  <span className="px-2 py-0.5 text-[10px] font-normal uppercase tracking-wider text-white bg-black/60 backdrop-blur-xs rounded">
                     {d.category}
                   </span>
                   {d.featured && (
-                    <span className="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white bg-[var(--color-accent)] rounded-sm">
+                    <span className="px-2 py-0.5 text-[10px] font-normal uppercase tracking-wider text-emerald-100 bg-emerald-900/80 backdrop-blur-xs rounded">
                       Featured
                     </span>
                   )}
                 </div>
+
+                {d.galleryImages && d.galleryImages.length > 0 && (
+                  <div className="absolute bottom-3 right-3 z-10">
+                    <span className="px-2 py-0.5 text-[10px] font-mono text-white/90 bg-black/60 backdrop-blur-xs rounded flex items-center gap-1">
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <span>{d.galleryImages.length + 1}</span>
+                    </span>
+                  </div>
+                )}
               </div>
 
-              {/* Content */}
-              <div className="flex flex-col flex-1 p-4">
-                <div className="flex items-start justify-between gap-2 mb-1">
-                  <h3 className="text-base font-semibold text-[var(--color-text-primary)] leading-tight">
+              {/* Card Body */}
+              <div className="flex flex-col flex-1 p-5">
+                <div className="flex items-baseline justify-between gap-2 mb-1">
+                  <h2 className="text-base font-medium text-[var(--color-text-primary)] group-hover:text-[var(--color-accent)] transition-colors leading-snug">
                     {d.name}
-                  </h3>
-                  <span className="text-xs text-[var(--color-text-tertiary)] shrink-0 mt-0.5">
+                  </h2>
+                  <span className="text-xs text-[var(--color-text-tertiary)] uppercase tracking-wider shrink-0">
                     {d.country}
                   </span>
                 </div>
 
-                <p className="text-xs text-[var(--color-text-tertiary)] mb-2">
+                <div className="text-xs font-medium text-[var(--color-accent)] mb-2.5">
                   Starting from {formatPrice(d.startingPrice)}
+                </div>
+
+                <p className="text-xs text-[var(--color-text-secondary)] line-clamp-2 leading-relaxed mb-4 flex-1">
+                  {d.shortDescription || d.description}
                 </p>
 
-                {d.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mb-3">
-                    {d.tags.slice(0, 4).map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 text-[10px] bg-[var(--color-bg-tertiary)] border border-[var(--color-border)] rounded-sm text-[var(--color-text-secondary)]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                    {d.tags.length > 4 && (
-                      <span className="text-[10px] text-[var(--color-text-tertiary)] self-center">
-                        +{d.tags.length - 4}
-                      </span>
-                    )}
-                  </div>
+                {/* Secondary Tags / Highlights */}
+                {d.tags && d.tags.length > 0 && (
+                  <p className="text-[11px] text-[var(--color-text-tertiary)] mb-4 truncate">
+                    {d.tags.join(' · ')}
+                  </p>
                 )}
 
-                <p className="text-sm text-[var(--color-text-secondary)] line-clamp-2 flex-1">
-                  {d.shortDescription}
-                </p>
-
-                {/* Actions */}
-                <div className="flex items-center gap-2 pt-3 mt-3 border-t border-[var(--color-border)]">
+                {/* Understated Action Bar */}
+                <div className="flex items-center justify-between pt-3 border-t border-[var(--color-border)] mt-auto text-xs">
                   <button
                     onClick={() => {
                       setEditing(d);
                       setFormOpen(true);
                     }}
-                    className="flex-1 px-3 py-2 text-xs font-semibold uppercase tracking-wider border border-[var(--color-border)] text-[var(--color-text-primary)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors rounded-sm cursor-pointer"
+                    className="font-normal text-[var(--color-text-primary)] hover:text-[var(--color-accent)] transition-colors cursor-pointer"
                   >
-                    Edit
+                    Edit journey
                   </button>
                   <button
                     onClick={() => setDeleteTarget(d)}
-                    className="flex-1 px-3 py-2 text-xs font-semibold uppercase tracking-wider border border-[var(--color-border)] text-red-600 hover:border-red-600 hover:bg-red-50 transition-colors rounded-sm cursor-pointer"
+                    className="font-normal text-stone-400 hover:text-red-600 transition-colors cursor-pointer"
                   >
                     Delete
                   </button>
@@ -272,30 +293,30 @@ export default function DestinationsManager() {
         </div>
       )}
 
-      {/* Delete confirmation modal */}
+      {/* Delete Confirmation Modal */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="w-full max-w-md bg-white border border-[var(--color-border)] rounded-lg shadow-xl p-6">
-            <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-2">
-              Delete destination?
-            </h3>
-            <p className="text-sm text-[var(--color-text-secondary)] mb-6">
-              This will permanently remove{' '}
-              <span className="font-medium text-[var(--color-text-primary)]">{deleteTarget.name}</span>{' '}
-              from the public website. This action cannot be undone.
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-white border border-[var(--color-border)] rounded shadow-xl p-6">
+            <h2 className="text-base font-medium text-[var(--color-text-primary)] mb-2">
+              Delete Destination
+            </h2>
+            <p className="text-xs text-[var(--color-text-secondary)] mb-6 leading-relaxed">
+              Are you sure you want to permanently delete{' '}
+              <strong className="text-[var(--color-text-primary)]">{deleteTarget.name}</strong>?{' '}
+              This will remove the destination from the published catalog and cannot be undone.
             </p>
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-3 text-xs">
               <button
                 onClick={() => setDeleteTarget(null)}
                 disabled={deleting}
-                className="px-4 py-2 text-sm font-medium border border-[var(--color-border)] rounded text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] transition-colors disabled:opacity-50 cursor-pointer"
+                className="px-3.5 py-1.5 border border-[var(--color-border)] rounded text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)] transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
                 disabled={deleting}
-                className="px-4 py-2 text-sm font-medium bg-red-600 text-white hover:bg-red-700 disabled:opacity-60 rounded cursor-pointer"
+                className="px-3.5 py-1.5 bg-red-600 text-white hover:bg-red-700 disabled:opacity-60 rounded transition-colors cursor-pointer active:scale-[0.98]"
               >
                 {deleting ? 'Deleting...' : 'Delete'}
               </button>
@@ -304,7 +325,7 @@ export default function DestinationsManager() {
         </div>
       )}
 
-      {/* Create / edit form modal */}
+      {/* Create / Edit Form Modal */}
       {formOpen && (
         <DestinationForm
           initial={editing}

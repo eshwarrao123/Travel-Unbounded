@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navigation from "@/components/layout/Navigation";
-import Footer from "@/components/layout/Footer";
-import ChatWidgetPublic from "@/components/chat/ChatWidgetPublic";
+import PublicShell from "@/components/layout/PublicShell";
 
 export const metadata: Metadata = {
   title: "Travel Unbounded - Extraordinary Journeys Await",
@@ -17,15 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-screen flex flex-col">
-        <Navigation />
-        <div className="flex-1">
-          {children}
-        </div>
-        <Footer />
-        <ChatWidgetPublic />
+      <body className="min-h-screen flex flex-col bg-[#fafaf9] text-stone-900 antialiased selection:bg-[#0f4c3a]/15 selection:text-[#0f4c3a]">
+        <PublicShell>{children}</PublicShell>
       </body>
     </html>
   );
 }
-

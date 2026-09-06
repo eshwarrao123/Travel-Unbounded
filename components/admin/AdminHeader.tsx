@@ -1,14 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 interface AdminHeaderProps {
   userEmail?: string;
+  title?: string;
 }
 
-export default function AdminHeader({ userEmail }: AdminHeaderProps) {
+export default function AdminHeader({ userEmail, title }: AdminHeaderProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [loggingOut, setLoggingOut] = useState(false);
 
   const handleLogout = async () => {
@@ -23,42 +26,52 @@ export default function AdminHeader({ userEmail }: AdminHeaderProps) {
     }
   };
 
+  // Derive current section for breadcrumb
+  const currentSection =
+    title ||
+    (pathname === '/admin/dashboard'
+      ? 'Overview'
+      : pathname === '/admin/enquiries'
+      ? 'Enquiries'
+      : pathname === '/admin/destinations'
+      ? 'Destinations'
+      : 'Admin');
+
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-[var(--color-border)] px-6 py-4">
+    <header className="sticky top-0 z-40 bg-white border-b border-[var(--color-border)] px-6 lg:px-10 py-3.5 hidden md:block">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <h1 className="text-lg font-semibold tracking-tight text-[var(--color-text-primary)]">
-            Travel Unbounded
-          </h1>
-          <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-[var(--color-accent-light)] text-[var(--color-accent)] uppercase tracking-wider">
-            Admin
-          </span>
+        {/* Left: Section Context */}
+        <div className="flex items-center gap-2 text-xs">
+          <span className="text-[var(--color-text-tertiary)] font-normal">Travel Unbounded</span>
+          <span className="text-[var(--color-border-strong)]">/</span>
+          <span className="text-[var(--color-text-primary)] font-medium">{currentSection}</span>
         </div>
 
+        {/* Right: user + public site + sign out */}
         <div className="flex items-center gap-4">
           {userEmail && (
-            <span className="text-sm text-[var(--color-text-secondary)] hidden sm:block">
+            <span className="text-xs text-[var(--color-text-secondary)] font-normal">
               {userEmail}
             </span>
           )}
-          
-          <a
+
+          <Link
             href="/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors hidden md:flex items-center gap-1.5"
+            className="text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors flex items-center gap-1.5 font-normal"
           >
-            <span>Public Site</span>
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            <span>Public site</span>
+            <svg className="w-3 h-3 text-[var(--color-text-tertiary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
-          </a>
+          </Link>
 
           {userEmail && (
             <button
               onClick={handleLogout}
               disabled={loggingOut}
-              className="text-sm px-3 py-1.5 rounded border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-xs px-2.5 py-1 rounded border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-red-300 hover:text-red-700 hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-normal active:scale-[0.98]"
             >
               {loggingOut ? 'Signing out...' : 'Sign Out'}
             </button>
@@ -68,3 +81,4 @@ export default function AdminHeader({ userEmail }: AdminHeaderProps) {
     </header>
   );
 }
+

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import {
@@ -18,10 +18,13 @@ interface DestinationFormProps {
 }
 
 const inputClass =
-  'w-full px-3 py-2 text-sm border border-[var(--color-border)] rounded text-[var(--color-text-primary)] bg-white focus:outline-none focus:border-[var(--color-accent)] transition-colors';
+  'w-full px-3 py-2 text-xs sm:text-sm border border-[var(--color-border)] rounded bg-white text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none focus:border-[var(--color-accent)] focus:ring-1 focus:ring-[var(--color-accent)] transition-all disabled:bg-gray-50 disabled:cursor-not-allowed';
 
 const labelClass =
-  'block text-xs font-medium text-[var(--color-text-tertiary)] uppercase tracking-wider mb-1.5';
+  'block text-xs font-medium text-[var(--color-text-primary)] mb-1.5';
+
+const sectionHeaderClass =
+  'text-xs font-semibold text-[var(--color-text-primary)] uppercase tracking-wider pb-2 border-b border-[var(--color-border)] flex items-center gap-2';
 
 export default function DestinationForm({ initial, onClose, onSaved }: DestinationFormProps) {
   const isEdit = Boolean(initial);
@@ -56,18 +59,17 @@ export default function DestinationForm({ initial, onClose, onSaved }: Destinati
     setFormError(null);
     setFieldErrors({});
 
-    // Minimal client-side checks — the server re-validates everything.
     const clientErrors: Record<string, string> = {};
-    if (!name.trim()) clientErrors.name = 'Name is required.';
-    if (!heroImage.trim()) clientErrors.imageUrl = 'Image URL is required.';
-    else if (!/^https?:\/\/\S+$/i.test(heroImage.trim())) clientErrors.imageUrl = 'Image URL must be a valid http(s) URL.';
+    if (!name.trim()) clientErrors.name = 'Destination name is required.';
+    if (!heroImage.trim()) clientErrors.imageUrl = 'Hero image URL is required.';
+    else if (!/^https?:\/\/\S+$/i.test(heroImage.trim())) clientErrors.imageUrl = 'Must be a valid http(s) image URL.';
     if (!description.trim()) clientErrors.description = 'Description is required.';
     if (price.trim() !== '' && (Number.isNaN(Number(price)) || Number(price) < 0)) {
-      clientErrors.price = 'Price must be a non-negative number.';
+      clientErrors.price = 'Starting price must be a non-negative number.';
     }
     if (Object.keys(clientErrors).length > 0) {
       setFieldErrors(clientErrors);
-      setFormError('Please fix the highlighted fields.');
+      setFormError('Please resolve the highlighted fields before saving.');
       return;
     }
 
@@ -101,7 +103,7 @@ export default function DestinationForm({ initial, onClose, onSaved }: Destinati
       );
 
       if (res.status === 401) {
-        setFormError('Your session has expired. Please sign in again.');
+        setFormError('Your administrative session has expired. Please sign in again.');
         return;
       }
 
@@ -117,294 +119,406 @@ export default function DestinationForm({ initial, onClose, onSaved }: Destinati
       onSaved(saved, isEdit ? 'edit' : 'create');
     } catch (err) {
       console.error('Save destination error:', err);
-      setFormError('Failed to save destination. Please try again.');
+      setFormError('Failed to save destination. Please verify network and try again.');
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white border border-[var(--color-border)] rounded-lg shadow-xl">
-        {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-[var(--color-border)] px-6 py-4 flex items-center justify-between">
-          <h3 className="text-base font-semibold text-[var(--color-text-primary)]">
-            {isEdit ? 'Edit Destination' : 'Add Destination'}
-          </h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-xs">
+      <div className="w-full max-w-2xl max-h-[90vh] flex flex-col bg-white border border-[var(--color-border)] rounded shadow-xl overflow-hidden">
+        {/* Modal Header */}
+        <div className="bg-[#fafaf9] border-b border-[var(--color-border)] px-6 py-4 flex items-center justify-between shrink-0">
+          <div>
+            <h2 className="text-base font-medium text-[var(--color-text-primary)]">
+              {isEdit ? 'Edit Destination' : 'Add Destination'}
+            </h2>
+            <p className="text-xs text-[var(--color-text-secondary)]">
+              Configure details, photography, and pricing for the published catalog
+            </p>
+          </div>
           <button
             onClick={onClose}
             disabled={submitting}
-            aria-label="Close"
-            className="p-1.5 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] transition-colors disabled:opacity-50 cursor-pointer"
+            aria-label="Close dialog"
+            className="w-7 h-7 rounded-full flex items-center justify-center text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-gray-100 transition-colors cursor-pointer disabled:opacity-40"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          {/* General error */}
+        {/* Scrollable Form Body */}
+        <form id="destination-edit-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto admin-scroll p-6 space-y-8">
+          {/* General Form Error Alert */}
           {formError && (
-            <div className="p-3 text-xs leading-relaxed text-red-800 bg-red-50 border border-red-200 rounded">
-              {formError}
+            <div className="p-3 text-xs leading-relaxed text-red-800 bg-red-50 border border-red-200 rounded flex items-center gap-2">
+              <svg className="w-4 h-4 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>{formError}</span>
             </div>
           )}
 
-          {/* Name */}
-          <div>
-            <label htmlFor="dest-name" className={labelClass}>Name *</label>
-            <input
-              id="dest-name"
-              type="text"
-              value={name}
-              onChange={(e) => handleNameChange(e.target.value)}
-              className={inputClass}
-              placeholder="e.g. Kerala Backwaters"
-              disabled={submitting}
-            />
-            {fieldErrors.name && <p className="text-xs text-red-600 mt-1">{fieldErrors.name}</p>}
-          </div>
+          {/* Section 1: Basic Information */}
+          <div className="space-y-4">
+            <h3 className={sectionHeaderClass}>
+              <span>01</span>
+              <span>Basic Information</span>
+            </h3>
 
-          {/* Slug / Category / Region */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label htmlFor="dest-slug" className={labelClass}>Slug</label>
+              <label htmlFor="dest-name" className={labelClass}>
+                Destination Title <span className="text-red-500">*</span>
+              </label>
               <input
-                id="dest-slug"
+                id="dest-name"
                 type="text"
-                value={slug}
-                onChange={(e) => {
-                  setSlugTouched(true);
-                  setSlug(e.target.value.toLowerCase());
-                }}
+                value={name}
+                onChange={(e) => handleNameChange(e.target.value)}
                 className={inputClass}
-                placeholder="auto-generated"
-                disabled={submitting || isEdit}
+                placeholder="e.g. Masai Mara Safari Reserve"
+                disabled={submitting}
               />
-              {fieldErrors.slug && <p className="text-xs text-red-600 mt-1">{fieldErrors.slug}</p>}
+              {fieldErrors.name && <p className="text-xs text-red-600 mt-1">{fieldErrors.name}</p>}
             </div>
-            <div>
-              <label htmlFor="dest-category" className={labelClass}>Category *</label>
-              <select
-                id="dest-category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value as 'india' | 'international')}
-                className={inputClass}
-                disabled={submitting}
-              >
-                {ALLOWED_DESTINATION_CATEGORIES.map((c) => (
-                  <option key={c} value={c}>{c === 'india' ? 'India' : 'International'}</option>
-                ))}
-              </select>
-              {fieldErrors.category && <p className="text-xs text-red-600 mt-1">{fieldErrors.category}</p>}
-            </div>
-            <div>
-              <label htmlFor="dest-region" className={labelClass}>Region</label>
-              <select
-                id="dest-region"
-                value={region}
-                onChange={(e) => setRegion(e.target.value)}
-                className={inputClass}
-                disabled={submitting}
-              >
-                {ALLOWED_DESTINATION_REGIONS.map((r) => (
-                  <option key={r} value={r}>{r}</option>
-                ))}
-              </select>
-              {fieldErrors.region && <p className="text-xs text-red-600 mt-1">{fieldErrors.region}</p>}
-            </div>
-          </div>
 
-          {/* Country / Duration / Price */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label htmlFor="dest-slug" className={labelClass}>URL Slug</label>
+                <input
+                  id="dest-slug"
+                  type="text"
+                  value={slug}
+                  onChange={(e) => {
+                    setSlugTouched(true);
+                    setSlug(e.target.value.toLowerCase());
+                  }}
+                  className={inputClass}
+                  placeholder="auto-generated"
+                  disabled={submitting || isEdit}
+                />
+                {fieldErrors.slug && <p className="text-xs text-red-600 mt-1">{fieldErrors.slug}</p>}
+              </div>
+
+              <div>
+                <label htmlFor="dest-category" className={labelClass}>
+                  Category <span className="text-red-500">*</span>
+                </label>
+                <select
+                  id="dest-category"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value as 'india' | 'international')}
+                  className={inputClass}
+                  disabled={submitting}
+                >
+                  {ALLOWED_DESTINATION_CATEGORIES.map((c) => (
+                    <option key={c} value={c}>{c === 'india' ? 'India' : 'International'}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="dest-region" className={labelClass}>Region</label>
+                <select
+                  id="dest-region"
+                  value={region}
+                  onChange={(e) => setRegion(e.target.value)}
+                  className={inputClass}
+                  disabled={submitting}
+                >
+                  {ALLOWED_DESTINATION_REGIONS.map((r) => (
+                    <option key={r} value={r}>{r}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
             <div>
               <label htmlFor="dest-country" className={labelClass}>Country</label>
-              <input id="dest-country" type="text" value={country} onChange={(e) => setCountry(e.target.value)} className={inputClass} placeholder="e.g. India" disabled={submitting} />
-              {fieldErrors.country && <p className="text-xs text-red-600 mt-1">{fieldErrors.country}</p>}
-            </div>
-            <div>
-              <label htmlFor="dest-duration" className={labelClass}>Duration</label>
-              <input id="dest-duration" type="text" value={duration} onChange={(e) => setDuration(e.target.value)} className={inputClass} placeholder="e.g. 6-8 days" disabled={submitting} />
-              {fieldErrors.duration && <p className="text-xs text-red-600 mt-1">{fieldErrors.duration}</p>}
-            </div>
-            <div>
-              <label htmlFor="dest-price" className={labelClass}>Price (INR)</label>
-              <input id="dest-price" type="number" min="0" step="1" value={price} onChange={(e) => setPrice(e.target.value)} className={inputClass} placeholder="e.g. 25000" disabled={submitting} />
-              {fieldErrors.price && <p className="text-xs text-red-600 mt-1">{fieldErrors.price}</p>}
-            </div>
-          </div>
-
-          {/* Hero Image URL + preview */}
-          <div>
-            <label htmlFor="dest-image" className={labelClass}>Hero Image *</label>
-            <input
-              id="dest-image"
-              type="url"
-              value={heroImage}
-              onChange={(e) => {
-                setHeroImage(e.target.value);
-                setImageFailed(false);
-              }}
-              className={inputClass}
-              placeholder="https://..."
-              disabled={submitting}
-            />
-            {fieldErrors.imageUrl && <p className="text-xs text-red-600 mt-1">{fieldErrors.imageUrl}</p>}
-            <div className="mt-3">
-              <div className="relative aspect-video w-full bg-[var(--color-bg-tertiary)] border border-[var(--color-border)] rounded overflow-hidden">
-                {heroImage.trim() === '' ? (
-                  <div className="absolute inset-0 flex items-center justify-center text-xs text-[var(--color-text-tertiary)]">
-                    Image preview appears here
-                  </div>
-                ) : imageFailed ? (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-xs text-red-600">
-                    <span>Image failed to load</span>
-                    <span className="text-[var(--color-text-tertiary)]">Check the URL and try again</span>
-                  </div>
-                ) : (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={heroImage.trim()}
-                    alt="Destination preview"
-                    className="absolute inset-0 w-full h-full object-cover"
-                    onError={() => setImageFailed(true)}
-                  />
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Gallery Images */}
-          <div>
-            <label className={labelClass}>Gallery Images</label>
-            <p className="text-xs text-[var(--color-text-tertiary)] mb-2">
-              Add multiple images to showcase this destination (optional)
-            </p>
-            
-            <div className="space-y-3">
-              {galleryImages.map((url, index) => (
-                <div key={index} className="flex gap-2">
-                  <div className="flex-1">
-                    <input
-                      type="url"
-                      value={url}
-                      onChange={(e) => {
-                        const newGallery = [...galleryImages];
-                        newGallery[index] = e.target.value;
-                        setGalleryImages(newGallery);
-                        setGalleryImageErrors((prev) => ({ ...prev, [index]: false }));
-                      }}
-                      className={inputClass}
-                      placeholder="https://..."
-                      disabled={submitting}
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setGalleryImages(galleryImages.filter((_, i) => i !== index));
-                      setGalleryImageErrors((prev) => {
-                        const updated = { ...prev };
-                        delete updated[index];
-                        return updated;
-                      });
-                    }}
-                    disabled={submitting}
-                    className="px-3 py-2 text-xs font-medium border border-[var(--color-border)] text-red-600 hover:border-red-600 hover:bg-red-50 transition-colors rounded disabled:opacity-50 cursor-pointer"
-                    aria-label="Remove image"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-              
-              <button
-                type="button"
-                onClick={() => setGalleryImages([...galleryImages, ''])}
+              <input
+                id="dest-country"
+                type="text"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                className={inputClass}
+                placeholder="e.g. Kenya"
                 disabled={submitting}
-                className="w-full px-3 py-2 text-xs font-medium border border-dashed border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors rounded disabled:opacity-50 cursor-pointer"
-              >
-                + Add Gallery Image
-              </button>
+              />
             </div>
-            
-            {/* Gallery Previews */}
-            {galleryImages.some((url) => url.trim() !== '') && (
-              <div className="mt-3 grid grid-cols-3 gap-2">
-                {galleryImages.map((url, index) => (
-                  url.trim() !== '' && (
-                    <div key={index} className="relative aspect-video bg-[var(--color-bg-tertiary)] border border-[var(--color-border)] rounded overflow-hidden">
-                      {galleryImageErrors[index] ? (
-                        <div className="absolute inset-0 flex items-center justify-center text-[10px] text-red-600 p-1 text-center">
-                          Failed to load
-                        </div>
-                      ) : (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={url.trim()}
-                          alt={`Gallery preview ${index + 1}`}
-                          className="absolute inset-0 w-full h-full object-cover"
-                          onError={() => setGalleryImageErrors((prev) => ({ ...prev, [index]: true }))}
-                        />
-                      )}
-                    </div>
-                  )
-                ))}
+          </div>
+
+          {/* Section 2: Trip Details */}
+          <div className="space-y-4">
+            <h3 className={sectionHeaderClass}>
+              <span>02</span>
+              <span>Trip Details</span>
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label htmlFor="dest-duration" className={labelClass}>Duration</label>
+                <input
+                  id="dest-duration"
+                  type="text"
+                  value={duration}
+                  onChange={(e) => setDuration(e.target.value)}
+                  className={inputClass}
+                  placeholder="e.g. 7 Days / 6 Nights"
+                  disabled={submitting}
+                />
               </div>
-            )}
-            
-            {fieldErrors.galleryImages && (
-              <p className="text-xs text-red-600 mt-1">{fieldErrors.galleryImages}</p>
-            )}
+
+              <div>
+                <label htmlFor="dest-price" className={labelClass}>Starting Price (INR)</label>
+                <input
+                  id="dest-price"
+                  type="number"
+                  min="0"
+                  step="1"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  className={inputClass}
+                  placeholder="e.g. 85000"
+                  disabled={submitting}
+                />
+                {fieldErrors.price && <p className="text-xs text-red-600 mt-1">{fieldErrors.price}</p>}
+              </div>
+            </div>
           </div>
 
-          {/* Short description */}
-          <div>
-            <label htmlFor="dest-short" className={labelClass}>Short Description</label>
-            <input id="dest-short" type="text" value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} className={inputClass} placeholder="Shown on destination cards (auto-derived from description if empty)" disabled={submitting} />
-            {fieldErrors.shortDescription && <p className="text-xs text-red-600 mt-1">{fieldErrors.shortDescription}</p>}
+          {/* Section 3: Media & Photography */}
+          <div className="space-y-4">
+            <h3 className={sectionHeaderClass}>
+              <span>03</span>
+              <span>Media &amp; Photography</span>
+            </h3>
+
+            {/* Hero Image */}
+            <div>
+              <label htmlFor="dest-image" className={labelClass}>
+                Hero Image URL <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="dest-image"
+                type="url"
+                value={heroImage}
+                onChange={(e) => {
+                  setHeroImage(e.target.value);
+                  setImageFailed(false);
+                }}
+                className={inputClass}
+                placeholder="https://images.unsplash.com/..."
+                disabled={submitting}
+              />
+              {fieldErrors.imageUrl && <p className="text-xs text-red-600 mt-1">{fieldErrors.imageUrl}</p>}
+
+              {/* Hero Preview */}
+              <div className="mt-3">
+                <div className="relative aspect-[16/9] w-full bg-[var(--color-bg-tertiary)] border border-[var(--color-border)] rounded overflow-hidden">
+                  {heroImage.trim() === '' ? (
+                    <div className="absolute inset-0 flex items-center justify-center text-xs text-[var(--color-text-tertiary)]">
+                      Hero photograph preview appears here
+                    </div>
+                  ) : imageFailed ? (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-xs text-red-600 bg-red-50">
+                      <span>Unable to load image from specified URL</span>
+                    </div>
+                  ) : (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={heroImage.trim()}
+                      alt="Hero preview"
+                      className="absolute inset-0 w-full h-full object-cover"
+                      onError={() => setImageFailed(true)}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Gallery Images */}
+            <div className="pt-2">
+              <div className="flex items-center justify-between mb-1.5">
+                <label className={labelClass}>Gallery Photography</label>
+                <span className="text-xs text-[var(--color-text-tertiary)] font-mono">
+                  {galleryImages.length} {galleryImages.length === 1 ? 'image' : 'images'}
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                {galleryImages.map((url, index) => (
+                  <div key={index} className="flex gap-2">
+                    <div className="flex-1">
+                      <input
+                        type="url"
+                        value={url}
+                        onChange={(e) => {
+                          const updated = [...galleryImages];
+                          updated[index] = e.target.value;
+                          setGalleryImages(updated);
+                          setGalleryImageErrors((prev) => ({ ...prev, [index]: false }));
+                        }}
+                        className={inputClass}
+                        placeholder="https://images.unsplash.com/..."
+                        disabled={submitting}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setGalleryImages(galleryImages.filter((_, i) => i !== index));
+                        setGalleryImageErrors((prev) => {
+                          const updated = { ...prev };
+                          delete updated[index];
+                          return updated;
+                        });
+                      }}
+                      disabled={submitting}
+                      className="px-3 py-1.5 text-xs font-normal text-stone-500 hover:text-red-600 border border-[var(--color-border)] rounded transition-colors cursor-pointer"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={() => setGalleryImages([...galleryImages, ''])}
+                  disabled={submitting}
+                  className="w-full py-2 px-3 text-xs font-normal border border-dashed border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] rounded transition-colors cursor-pointer"
+                >
+                  + Add another gallery photo
+                </button>
+              </div>
+
+              {/* Gallery Previews Grid */}
+              {galleryImages.some((url) => url.trim() !== '') && (
+                <div className="mt-3 grid grid-cols-4 gap-2">
+                  {galleryImages.map((url, index) => (
+                    url.trim() !== '' && (
+                      <div key={index} className="relative aspect-[4/3] bg-[var(--color-bg-tertiary)] border border-[var(--color-border)] rounded overflow-hidden">
+                        {galleryImageErrors[index] ? (
+                          <div className="absolute inset-0 flex items-center justify-center text-[10px] text-red-600 p-1 text-center bg-red-50">
+                            Failed to load
+                          </div>
+                        ) : (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={url.trim()}
+                            alt={`Gallery ${index + 1}`}
+                            className="absolute inset-0 w-full h-full object-cover"
+                            onError={() => setGalleryImageErrors((prev) => ({ ...prev, [index]: true }))}
+                          />
+                        )}
+                      </div>
+                    )
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Description */}
-          <div>
-            <label htmlFor="dest-desc" className={labelClass}>Description *</label>
-            <textarea id="dest-desc" rows={4} value={description} onChange={(e) => setDescription(e.target.value)} className={inputClass} placeholder="Full destination description shown on the detail page" disabled={submitting} />
-            {fieldErrors.description && <p className="text-xs text-red-600 mt-1">{fieldErrors.description}</p>}
+          {/* Section 4: Content & Editorial */}
+          <div className="space-y-4">
+            <h3 className={sectionHeaderClass}>
+              <span>04</span>
+              <span>Content</span>
+            </h3>
+
+            <div>
+              <label htmlFor="dest-short" className={labelClass}>Card Summary (Teaser)</label>
+              <input
+                id="dest-short"
+                type="text"
+                value={shortDescription}
+                onChange={(e) => setShortDescription(e.target.value)}
+                className={inputClass}
+                placeholder="Concise overview featured on destination catalog cards (max 140 chars)"
+                disabled={submitting}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="dest-desc" className={labelClass}>
+                Detailed Overview &amp; Itinerary <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                id="dest-desc"
+                rows={4}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className={inputClass}
+                placeholder="Complete editorial description displayed on the destination detail page..."
+                disabled={submitting}
+              />
+              {fieldErrors.description && <p className="text-xs text-red-600 mt-1">{fieldErrors.description}</p>}
+            </div>
+
+            <div>
+              <label htmlFor="dest-tags" className={labelClass}>Tags / Highlights</label>
+              <input
+                id="dest-tags"
+                type="text"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                className={inputClass}
+                placeholder="Comma separated: Big Cats, Safari, Photography, UNESCO"
+                disabled={submitting}
+              />
+            </div>
           </div>
 
-          {/* Tags */}
-          <div>
-            <label htmlFor="dest-tags" className={labelClass}>Tags</label>
-            <input id="dest-tags" type="text" value={tags} onChange={(e) => setTags(e.target.value)} className={inputClass} placeholder="Comma separated, e.g. Nature, Culture" disabled={submitting} />
-            {fieldErrors.tags && <p className="text-xs text-red-600 mt-1">{fieldErrors.tags}</p>}
-          </div>
+          {/* Section 5: Publishing Settings */}
+          <div className="space-y-4">
+            <h3 className={sectionHeaderClass}>
+              <span>05</span>
+              <span>Publishing</span>
+            </h3>
 
-          {/* Featured */}
-          <label className="flex items-center gap-2 cursor-pointer select-none">
-            <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} className="w-4 h-4 accent-[var(--color-accent)]" disabled={submitting} />
-            <span className="text-sm text-[var(--color-text-secondary)]">Feature this destination on the public site</span>
-          </label>
-
-          {/* Actions */}
-          <div className="flex justify-end gap-3 pt-2 border-t border-[var(--color-border)]">
-            <button
-              type="button"
-              onClick={onClose}
-              disabled={submitting}
-              className="px-4 py-2 text-sm font-medium border border-[var(--color-border)] rounded text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] transition-colors disabled:opacity-50 cursor-pointer"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={submitting}
-              className="px-5 py-2 text-sm font-semibold bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-hover)] transition-colors disabled:opacity-60 rounded cursor-pointer"
-            >
-              {submitting ? 'Saving...' : isEdit ? 'Save Changes' : 'Create Destination'}
-            </button>
+            <div className="p-3.5 bg-[var(--color-bg-secondary)] rounded border border-[var(--color-border)]">
+              <label className="flex items-start gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={featured}
+                  onChange={(e) => setFeatured(e.target.checked)}
+                  className="w-4 h-4 mt-0.5 accent-[var(--color-accent)] cursor-pointer"
+                  disabled={submitting}
+                />
+                <div>
+                  <span className="text-xs font-medium text-[var(--color-text-primary)] block">
+                    Feature on Homepage Spotlight
+                  </span>
+                  <span className="text-xs text-[var(--color-text-secondary)]">
+                    Prominently highlight this journey in the curated expedition showcase.
+                  </span>
+                </div>
+              </label>
+            </div>
           </div>
         </form>
+
+        {/* Modal Footer */}
+        <div className="bg-[#fafaf9] border-t border-[var(--color-border)] px-6 py-3.5 flex items-center justify-between shrink-0">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={submitting}
+            className="px-3.5 py-1.5 text-xs font-normal border border-[var(--color-border)] rounded text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)] transition-colors cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="destination-edit-form"
+            disabled={submitting}
+            className="px-4 py-1.5 text-xs font-medium bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white rounded transition-colors disabled:opacity-60 cursor-pointer active:scale-[0.98]"
+          >
+            {submitting ? 'Saving...' : isEdit ? 'Save Changes' : 'Publish Destination'}
+          </button>
+        </div>
       </div>
     </div>
   );

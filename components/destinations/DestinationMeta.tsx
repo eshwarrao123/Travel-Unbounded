@@ -5,34 +5,57 @@ interface DestinationMetaProps {
 }
 
 export default function DestinationMeta({ duration, bestTimeToVisit, startingPrice }: DestinationMetaProps) {
+  const items = [
+    {
+      label: 'Duration',
+      value: duration,
+    },
+    {
+      label: 'Best Time to Visit',
+      value: bestTimeToVisit.join(' · '),
+    },
+    ...(startingPrice
+      ? [
+          {
+            label: 'Starting From',
+            value: `₹${startingPrice.toLocaleString('en-IN')}`,
+            isPrice: true,
+          },
+        ]
+      : []),
+  ];
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-8 bg-[var(--color-bg-secondary)]">
-      <div className="text-center md:text-left">
-        <p className="text-sm uppercase tracking-wider text-[var(--color-text-tertiary)] mb-2">
-          Duration
-        </p>
-        <p className="heading-subsection text-[var(--color-text-primary)]">
-          {duration}
-        </p>
-      </div>
-      <div className="text-center md:text-left">
-        <p className="text-sm uppercase tracking-wider text-[var(--color-text-tertiary)] mb-2">
-          Best Time to Visit
-        </p>
-        <p className="heading-subsection text-[var(--color-text-primary)]">
-          {bestTimeToVisit.join(', ')}
-        </p>
-      </div>
-      {startingPrice && (
-        <div className="text-center md:text-left">
-          <p className="text-sm uppercase tracking-wider text-[var(--color-text-tertiary)] mb-2">
-            Starting From
-          </p>
-          <p className="heading-subsection text-[var(--color-text-primary)]">
-            ₹{startingPrice.toLocaleString('en-IN')}
-          </p>
+    <div className="bg-white border-b border-[var(--color-border)]">
+      <div className="container-content">
+        <div className="flex flex-col sm:flex-row">
+          {items.map((item, index) => (
+            <div
+              key={item.label}
+              className={`
+                flex-1 py-5
+                ${index < items.length - 1
+                  ? 'border-b sm:border-b-0 sm:border-r border-[var(--color-border)]'
+                  : ''}
+                ${index > 0 ? 'sm:pl-8' : ''}
+              `}
+            >
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-text-tertiary)] mb-1.5">
+                {item.label}
+              </p>
+              <p
+                className={`text-lg font-medium leading-tight ${
+                  item.isPrice
+                    ? 'text-[var(--color-accent)]'
+                    : 'text-[var(--color-text-primary)]'
+                }`}
+              >
+                {item.value}
+              </p>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 function LoginForm() {
   const router = useRouter();
@@ -17,9 +18,8 @@ function LoginForm() {
     e.preventDefault();
     setErrorMessage(null);
 
-    // Client-side quick checks
     if (!email.trim()) {
-      setErrorMessage('Please enter your email address.');
+      setErrorMessage('Please enter your administrator email address.');
       return;
     }
     if (!password) {
@@ -44,188 +44,233 @@ function LoginForm() {
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        setErrorMessage(data.message || 'Authentication failed. Please check your credentials.');
+        setErrorMessage(data.message || 'Authentication failed. Please verify your credentials.');
         setLoading(false);
         return;
       }
 
-      // Successful login -> Redirect to destination or dashboard
       router.push(redirectTo);
       router.refresh();
     } catch (err) {
       console.error('Login submit error:', err);
-      setErrorMessage('Unable to connect to the authentication service. Please try again.');
+      setErrorMessage('Unable to connect to authentication service. Please try again.');
       setLoading(false);
     }
   };
 
+  const handleFillDemo = () => {
+    setEmail('admin@gmail.com');
+    setPassword('TravelAdmin@123');
+    setErrorMessage(null);
+  };
+
   return (
-    <div className="w-full grid md:grid-cols-2 gap-0 max-w-5xl bg-white rounded-lg border border-[var(--color-border)] shadow-lg overflow-hidden">
-      {/* Left Panel - Branding */}
-      <div className="hidden md:flex flex-col justify-between bg-[var(--color-accent)] text-white p-12">
-        <div>
-          <h2 className="text-3xl font-light mb-3 tracking-tight">
+    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#fafaf9]">
+      {/* Editorial Visual Left Panel */}
+      <div className="relative w-full lg:w-1/2 min-h-[200px] sm:min-h-[240px] lg:min-h-screen flex flex-col justify-between p-6 sm:p-10 lg:p-16 text-white overflow-hidden bg-[#0c241b] shrink-0">
+        {/* Background Image with warm editorial scrim */}
+        <div
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out"
+          style={{
+            backgroundImage: `url("https://images.unsplash.com/photo-1516426122078-c23e76319801?q=80&w=2940&auto=format&fit=crop")`,
+          }}
+        />
+        {/* Editorial overlay: subtle dark vignette */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/55" />
+        <div className="absolute inset-0 bg-[#0f4c3a]/25 mix-blend-multiply" />
+
+        {/* Top Branding */}
+        <div className="relative z-10 flex items-center gap-2.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+          <span className="text-sm font-semibold tracking-tight text-white">
             Travel Unbounded
-          </h2>
-          <p className="text-sm text-white/80 leading-relaxed">
-            Administrative Portal
+          </span>
+          <span className="text-xs text-white/60 font-light">/ Admin</span>
+        </div>
+
+        {/* Center / Editorial Statement */}
+        <div className="relative z-10 my-auto py-4 lg:py-0 max-w-lg">
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-light tracking-tight text-white leading-[1.14] mb-2 sm:mb-3">
+            Curating extraordinary journeys across the globe.
+          </h1>
+          <p className="text-xs sm:text-sm lg:text-base text-white/80 font-light leading-relaxed hidden sm:block">
+            Internal operations workspace for bespoke expedition management, client enquiries, and global destinations.
           </p>
         </div>
-        
-        <div className="space-y-4 text-sm text-white/70">
-          <div className="flex items-start gap-3">
-            <svg className="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-            <div>
-              <p className="font-medium text-white mb-1">Secure Access</p>
-              <p className="text-xs leading-relaxed">End-to-end encrypted session management</p>
-            </div>
-          </div>
-          
-          <div className="flex items-start gap-3">
-            <svg className="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-            <div>
-              <p className="font-medium text-white mb-1">Real-time Operations</p>
-              <p className="text-xs leading-relaxed">Manage enquiries and destinations instantly</p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="text-xs text-white/50 pt-8 border-t border-white/10">
-          <p>Bangalore, India • Since 2008</p>
+
+        {/* Bottom Metadata */}
+        <div className="relative z-10 text-xs text-white/50 flex items-center justify-between pt-3 border-t border-white/15">
+          <span>Masai Mara National Reserve, Kenya</span>
+          <span className="font-mono text-[11px] hidden sm:inline">Expedition Catalog</span>
         </div>
       </div>
 
-      {/* Right Panel - Login Form */}
-      <div className="p-8 md:p-12 flex flex-col justify-center">
-        <div className="mb-8">
-          <div className="md:hidden mb-6">
-            <h2 className="text-xl font-semibold text-[var(--color-text-primary)]">
-              Travel Unbounded
+      {/* Authentication Right Panel */}
+      <div className="w-full lg:w-1/2 flex-1 flex flex-col justify-center items-center p-6 sm:p-10 lg:p-14 bg-[#fafaf9] border-t lg:border-t-0 lg:border-l border-stone-200">
+        {/* Centered Form Container (380-440px width) */}
+        <div className="w-full max-w-[420px] my-auto py-6 sm:py-8">
+          {/* Section Eyebrow & Title */}
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
+                Travel Unbounded
+              </span>
+              <span className="text-stone-300">·</span>
+              <span className="text-[11px] font-medium text-stone-500">
+                Administrative Access
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-light text-stone-900 tracking-tight mb-1.5">
+              Sign In
             </h2>
-            <p className="text-xs text-[var(--color-text-tertiary)] uppercase tracking-wider mt-1">
-              Admin Portal
+            <p className="text-xs sm:text-sm text-stone-500 leading-relaxed">
+              Enter your administrator credentials to access the management portal.
             </p>
           </div>
-          
-          <h1 className="text-2xl font-medium text-[var(--color-text-primary)] mb-2">
-            Sign In
-          </h1>
-          <p className="text-sm text-[var(--color-text-secondary)]">
-            Access the administrative dashboard
-          </p>
-        </div>
 
-        {errorMessage && (
-          <div
-            role="alert"
-            className="mb-6 p-3.5 rounded bg-red-50 border border-red-200 text-sm text-red-700 flex items-start gap-2.5"
-          >
-            <svg
-              className="w-5 h-5 text-red-500 shrink-0 mt-0.5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          {/* Error Alert */}
+          {errorMessage && (
+            <div
+              role="alert"
+              className="mb-5 p-3.5 rounded-md bg-red-50 border border-red-200 text-xs text-red-800 flex items-start gap-2.5"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              <svg
+                className="w-4 h-4 text-red-600 shrink-0 mt-0.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span className="leading-relaxed">{errorMessage}</span>
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+            <div>
+              <label
+                htmlFor="admin-email"
+                className="block text-xs font-semibold text-stone-700 mb-1.5"
+              >
+                Email address
+              </label>
+              <input
+                id="admin-email"
+                type="email"
+                name="email"
+                autoComplete="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
+                placeholder="admin@gmail.com"
+                className="w-full px-3.5 py-2.5 bg-white border border-stone-200 rounded-md text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-[#0f4c3a] focus:ring-2 focus:ring-[#0f4c3a]/15 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
               />
-            </svg>
-            <span className="leading-relaxed">{errorMessage}</span>
-          </div>
-        )}
+            </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-          <div>
-            <label
-              htmlFor="admin-email"
-              className="block text-sm font-medium text-[var(--color-text-primary)] mb-2"
-            >
-              Email Address
-            </label>
-            <input
-              id="admin-email"
-              type="email"
-              name="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+            <div>
+              <label
+                htmlFor="admin-password"
+                className="block text-xs font-semibold text-stone-700 mb-1.5"
+              >
+                Password
+              </label>
+              <input
+                id="admin-password"
+                type="password"
+                name="password"
+                autoComplete="current-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
+                placeholder="••••••••••••"
+                className="w-full px-3.5 py-2.5 bg-white border border-stone-200 rounded-md text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-[#0f4c3a] focus:ring-2 focus:ring-[#0f4c3a]/15 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+              />
+            </div>
+
+            <button
+              type="submit"
               disabled={loading}
-              placeholder="admin@gmail.com"
-              className="w-full px-4 py-2.5 bg-white border border-[var(--color-border)] rounded text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 transition-all disabled:bg-gray-50 disabled:cursor-not-allowed"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="admin-password"
-              className="block text-sm font-medium text-[var(--color-text-primary)] mb-2"
+              className="w-full mt-2 py-3 px-4 bg-[#0f4c3a] hover:bg-[#0c3d2e] text-white text-sm font-medium rounded-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.99] shadow-xs"
             >
-              Password
-            </label>
-            <input
-              id="admin-password"
-              type="password"
-              name="password"
-              autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={loading}
-              placeholder="••••••••••••"
-              className="w-full px-4 py-2.5 bg-white border border-[var(--color-border)] rounded text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 transition-all disabled:bg-gray-50 disabled:cursor-not-allowed"
-            />
-          </div>
+              {loading ? (
+                <>
+                  <svg
+                    className="animate-spin h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                  <span>Signing in...</span>
+                </>
+              ) : (
+                <span>Sign In</span>
+              )}
+            </button>
+          </form>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full mt-3 btn btn-primary py-3 px-4 text-sm font-medium flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {loading ? (
-              <>
-                <svg
-                  className="animate-spin h-4 w-4 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
+          {/* Evaluator Credentials Card */}
+          <div className="mt-6 p-4 bg-white border border-stone-200/90 rounded-md shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-[11px] font-semibold text-stone-600 uppercase tracking-wider">
+                Evaluator Access
+              </span>
+              <button
+                type="button"
+                onClick={handleFillDemo}
+                className="inline-flex items-center gap-1 text-xs text-[#0f4c3a] hover:text-[#0c3d2e] bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/60 px-2 py-0.5 rounded font-medium transition-colors cursor-pointer"
+              >
+                <span>Auto-fill</span>
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                <span>Verifying...</span>
-              </>
-            ) : (
-              <span>Sign In</span>
-            )}
-          </button>
-        </form>
+              </button>
+            </div>
+            <div className="text-xs text-stone-700 space-y-1 font-mono">
+              <div className="flex items-center justify-between">
+                <span className="text-stone-400 font-sans text-[11px]">Email</span>
+                <span className="font-medium text-stone-800">admin@gmail.com</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-stone-400 font-sans text-[11px]">Password</span>
+                <span className="font-medium text-stone-800">TravelAdmin@123</span>
+              </div>
+            </div>
+          </div>
 
-        {/* Evaluator Helper Notice */}
-        <div className="mt-8 pt-6 border-t border-[var(--color-border)]">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-[var(--color-text-tertiary)]">Evaluator Account</span>
-            <code className="font-mono text-[var(--color-text-secondary)] bg-[var(--color-bg-tertiary)] px-2 py-1 rounded">
-              admin@gmail.com
-            </code>
+          {/* Quiet Link to Public Site */}
+          <div className="mt-6 pt-4 border-t border-stone-200/70 flex items-center justify-between text-xs text-stone-400">
+            <span>&copy; {new Date().getFullYear()} Travel Unbounded</span>
+            <Link
+              href="/"
+              className="text-stone-500 hover:text-[#0f4c3a] transition-colors flex items-center gap-1"
+            >
+              <span>View public site</span>
+              <svg className="w-3 h-3 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </Link>
           </div>
         </div>
       </div>
@@ -235,14 +280,19 @@ function LoginForm() {
 
 export default function AdminLoginPage() {
   return (
-    <div className="fixed inset-0 z-50 bg-[var(--color-bg-secondary)] flex items-center justify-center p-6 overflow-y-auto">
-      <Suspense fallback={
-        <div className="w-full max-w-md bg-white rounded-lg border border-[var(--color-border)] p-8 text-center text-sm text-[var(--color-text-secondary)]">
-          Loading sign in portal...
+    <Suspense
+      fallback={
+        <div className="min-h-screen w-full flex items-center justify-center bg-[#fafaf9]">
+          <div className="text-center space-y-3">
+            <div className="w-8 h-8 border-2 border-[#0f4c3a] border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="text-xs text-stone-500 font-normal">
+              Loading...
+            </p>
+          </div>
         </div>
-      }>
-        <LoginForm />
-      </Suspense>
-    </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

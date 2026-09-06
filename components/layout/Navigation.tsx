@@ -79,16 +79,16 @@ export default function Navigation() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-5 border-t border-[var(--color-border)]">
-            <div className="flex flex-col gap-1">
+          <div className="md:hidden py-4 border-t border-[var(--color-border)] animate-mobile-menu">
+            <div className="flex flex-col">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`py-3 text-base font-medium transition-colors ${
+                  className={`py-3.5 text-base transition-colors border-b border-[var(--color-border)] last:border-b-0 ${
                     pathname === link.href
-                      ? 'text-[var(--color-accent)]'
-                      : 'text-[var(--color-text-primary)]'
+                      ? 'text-[var(--color-accent)] font-medium'
+                      : 'text-[var(--color-text-primary)] hover:text-[var(--color-accent)]'
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -96,8 +96,8 @@ export default function Navigation() {
                 </Link>
               ))}
               <Link
-                href="/contact"
-                className="btn btn-primary mt-3 w-full text-center"
+                href="/enquire"
+                className="btn btn-primary mt-5 w-full text-center text-sm"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Plan Your Trip
