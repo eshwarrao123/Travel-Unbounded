@@ -1,3 +1,5 @@
+Here is the admin login link : https://travel-unbounded-azure.vercel.app/admin/login
+
 # Travel Unbounded — Experiential Travel Platform
 
 A full-stack luxury travel web application and administrative portal built for the **Full Stack Developer Assignment**. The platform delivers curated experiential destination discovery, real-time booking enquiry capture with MongoDB Atlas persistence, an intelligent Gemini-powered trip planning assistant, and a comprehensive administrative portal featuring pipeline analytics, lightweight CRM enquiry management, and destination content management.
