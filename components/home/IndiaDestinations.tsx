@@ -25,7 +25,7 @@ export default async function IndiaDestinations() {
             href="/destinations"
             className="text-sm font-medium text-[var(--color-accent)] hover:underline shrink-0"
           >
-            View all â†’
+            View all
           </Link>
         </div>
 
