@@ -19,6 +19,7 @@ export default function CallToAction() {
       {/* Content */}
       <div className="container-content relative z-10 flex justify-center">
         <div className="w-full max-w-3xl mx-auto text-center flex flex-col items-center justify-center">
+          <br />
           <h2 className="heading-section text-white text-center mb-6 w-full">
             Ready to Begin Your Journey?
           </h2>
@@ -36,6 +37,7 @@ export default function CallToAction() {
           <p className="body-small text-white/80 text-center mt-8 w-full">
             No obligations. Just a conversation about possibilities.
           </p>
+          <br />
         </div>
       </div>
     </section>

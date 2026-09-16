@@ -16,7 +16,9 @@ export default function Home() {
       <InternationalDestinations />
       <ValueProposition />
       <TravelStory />
+      <br />
       <CallToAction />
+
     </main>
   );
 }
