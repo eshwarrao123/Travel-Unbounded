@@ -99,6 +99,7 @@ export default async function DestinationsPage() {
       <section className="py-14 md:py-20 bg-[var(--color-bg-primary)]">
         <div className="container-content flex justify-center">
           <div className="w-full max-w-2xl mx-auto text-center flex flex-col items-center justify-center">
+            <br />
             <h2 className="heading-section text-[var(--color-text-primary)] text-center mb-4 w-full">
               Can&apos;t Find What You&apos;re Looking For?
             </h2>
@@ -108,6 +109,7 @@ export default async function DestinationsPage() {
             <Link href="/contact" className="btn btn-primary">
               Get in Touch
             </Link>
+            <br />
           </div>
         </div>
       </section>
